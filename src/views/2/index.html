@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      @font-face {
+        font-family: "icomoon";
+        src: url("fonts/icomoon.eot?wr5es");
+        src: url("fonts/icomoon.eot?wr5es#iefix") format("embedded-opentype"),
+          url("fonts/icomoon.ttf?wr5es") format("truetype"),
+          url("fonts/icomoon.woff?wr5es") format("woff"),
+          url("fonts/icomoon.svg?wr5es#icomoon") format("svg");
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+      }
+      * {
+        font-family: "icomoon";
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      /*   body{
+            height: 500vh;
+        } */
+      .bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url(img/11.jpg);
+        background-size: cover;
+        z-index: -10;
+      }
+      .zd {
+        position: fixed;
+        bottom: 50px;
+        right: -55px;
+        width: 50px;
+        height: 50px;
+        background-color: rgba(19, 117, 182, 0.8);
+        border-radius: 10px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 25px;
+        color: aliceblue;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.5s;
+      }
+      .zd:hover {
+        color: rgb(35, 187, 15);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg"></div>
+    <div class="zd"></div>
+    <div
+      style="width: 500px; height: 500px; background-color: rgb(118, 33, 129)"
+    ></div>
+    <div
+      style="width: 500px; height: 500px; background-color: rgb(36, 129, 33)"
+    ></div>
+    <div
+      style="width: 500px; height: 500px; background-color: rgb(118, 33, 129)"
+    ></div>
+    <div
+      style="width: 500px; height: 500px; background-color: rgb(129, 107, 33)"
+    ></div>
+    <div
+      style="width: 500px; height: 500px; background-color: rgb(129, 33, 33)"
+    ></div>
+    <div
+      style="width: 500px; height: 500px; background-color: rgb(197, 146, 204)"
+    ></div>
+    <div
+      style="width: 500px; height: 500px; background-color: rgb(41, 129, 33)"
+    ></div>
+    <script>
+      var zd = document.querySelector(".zd");
+      zd.addEventListener(
+        "click",
+        function () {
+          var time = setInterval(function () {
+            let top = pageYOffset;
+            let step = Math.ceil(top / 50);
+            window.scroll(0, top - step);
+            if (top == 0) {
+              clearInterval(time);
+            }
+          });
+        },
+        30
+      );
+      window.addEventListener("scroll", function () {
+        if (document.documentElement.scrollTop > 0) {
+          zd.style.right = 5 + "px";
+        } else {
+          zd.style.right = -55 + "px";
+        }
+      });
+    </script>
+  </body>
+</html>
