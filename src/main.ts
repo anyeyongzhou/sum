@@ -10,6 +10,10 @@ import ElementPlus from "element-plus";
 import "/@/theme/index.scss";
 import VueGridLayout from "vue-grid-layout";
 
+import "bpmn-js/dist/assets/diagram-js.css";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
+import "bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css";
+
 const app = createApp(App);
 
 directive(app);
