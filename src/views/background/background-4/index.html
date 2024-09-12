@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      section {
+        height: 100vh;
+        overflow: hidden;
+        background-color: rgb(5, 5, 5);
+        cursor: pointer;
+      }
+      p {
+        position: fixed;
+        top: 0;
+        left: 0;
+        font-size: 20px;
+        letter-spacing: -1px;
+        line-height: 12px;
+        background: url(./bg.png);
+        background-size: 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-align: justify;
+        color: transparent;
+      }
+      div {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: url(../assets/rose/rose-2.jpg);
+        background-size: 100%;
+        background-attachment: fixed;
+        filter: contrast(2);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 原理就是两个div叠加
+文字固定在视口，背景为图片，文字颜色透明，背景图片裁剪为文字background-clip: text，这样左边的    效果就出现了
+图片作为绝对定位，背景图在窗口固定 background-attachment: fixed
+监听鼠标移动，改变某一层的宽度 -->
+    <section>
+      <p>
+        The only survivor couldn't tell us why the zimtrum sank. It seems that
+        the speed of the ship's sinking is very fast. This theory can be
+        supported by a lot of debris. However, the specific cause of the
+        cracking could not be determined. No drastic weather changes were
+        reported in the radio navigation signal area that day. Survivors'
+        estimates of the weather based on their impressions are unreliable.
+        Weather was at best one of the factors that led to the sinking of the
+        ship. The reason may be inside the ship. The explosion of the boiler may
+        be serious, but the survivors believe that there is a mechanical
+        explosion. The ship has lived for 29 years (made in 1948 at erlanson and
+        skank shipyards in Malmo) and was renovated in 1970. Bad weather and
+        fatigue of the ship's structure may have contributed to the accident,
+        but this is only speculation. There were no reports of accidents with
+        other vessels in that area that day, so there was no possibility of
+        collision with other vessels. There is a possibility of collision with
+        the wreckage, but this cannot be confirmed. The only survivor couldn't
+        tell us why the zimtrum sank. It seems that the speed of the ship's
+        sinking is very fast. This theory can be supported by a lot of debris.
+        However, the specific cause of the cracking could not be determined. No
+        drastic weather changes were reported in the radio navigation signal
+        area that day. Survivors' estimates of the weather based on their
+        impressions are unreliable. Weather was at best one of the factors that
+        led to the sinking of the ship. The reason may be inside the ship. The
+        explosion of the boiler may be serious, but the survivors believe that
+        there is a mechanical explosion. The ship has lived for 29 years (made
+        in 1948 at erlanson and skank shipyards in Malmo) and was renovated in
+        1970. Bad weather and fatigue of the ship's structure may have
+        contributed to the accident, but this is only speculation. There were no
+        reports of accidents with other vessels in that area that day, so there
+        was no possibility of collision with other vessels. There is a
+        possibility of collision with the wreckage, but this cannot be
+        confirmed. The only survivor couldn't tell us why the zimtrum sank. It
+        seems that the speed of the ship's sinking is very fast. This theory can
+        be supported by a lot of debris. However, the specific cause of the
+        cracking could not be determined. No drastic weather changes were
+        reported in the radio navigation signal area that day. Survivors'
+        estimates of the weather based on their impressions are unreliable.
+        Weather was at best one of the factors that led to the sinking of the
+        ship. The reason may be inside the ship. The explosion of the boiler may
+        be serious, but the survivors believe that there is a mechanical
+        explosion. The ship has lived for 29 years (made in 1948 at erlanson and
+        skank shipyards in Malmo) and was renovated in 1970. Bad weather and
+        fatigue of the ship's structure may have contributed to the accident,
+        but this is only speculation. There were no reports of accidents with
+        other vessels in that area that day, so there was no possibility of
+        collision with other vessels. There is a possibility of collision with
+        the wreckage, but this cannot be confirmed. The only survivor couldn't
+        tell us why the zimtrum sank. It seems that the speed of the ship's
+        sinking is very fast. This theory can be supported by a lot of debris.
+        However, the specific cause of the cracking could not be determined. No
+        drastic weather changes were reported in the radio navigation signal
+        area that day. Survivors' estimates of the weather based on their
+        impressions are unreliable. Weather was at best one of the factors that
+        led to the sinking of the ship. The reason may be inside the ship. The
+        explosion of the boiler may be serious, but the survivors believe that
+        there is a mechanical explosion. The ship has lived for 29 years (made
+        in 1948 at erlanson and skank shipyards in Malmo) and was renovated in
+        1970. Bad weather and fatigue of the ship's structure may have
+        contributed to the accident, but this is only speculation. There were no
+        reports of accidents with other vessels in that area that day, so there
+        was no possibility of collision with other vessels. There is a
+        possibility of collision with the wreckage, but this cannot be
+        confirmed. The only survivor couldn't tell us why the zimtrum sank. It
+        seems that the speed of the ship's sinking is very fast. This theory can
+        be supported by a lot of debris. However, the specific cause of the
+        cracking could not be determined. No drastic weather changes were
+        reported in the radio navigation signal area that day. Survivors'
+        estimates of the weather based on their impressions are unreliable.
+        Weather was at best one of the factors that led to the sinking of the
+        ship. The reason may be inside the ship. The explosion of the boiler may
+        be serious, but the survivors believe that there is a mechanical
+        explosion. The ship has lived for 29 years (made in 1948 at erlanson and
+        skank shipyards in Malmo) and was renovated in 1970. Bad weather and
+        fatigue of the ship's structure may have contributed to the accident,
+        but this is only speculation. There were no reports of accidents with
+        other vessels in that area that day, so there was no possibility of
+        collision with other vessels. There is a possibility of collision with
+        the wreckage, but this cannot be confirmed. The only survivor couldn't
+        tell us why the zimtrum sank. It seems that the speed of the ship's
+        sinking is very fast. This theory can be supported by a lot of debris.
+        However, the specific cause of the cracking could not be determined. No
+        drastic weather changes were reported in the radio navigation signal
+        area that day. Survivors' estimates of the weather based on their
+        impressions are unreliable. Weather was at best one of the factors that
+        led to the sinking of the ship. The reason may be inside the ship. The
+        explosion of the boiler may be serious, but the survivors believe that
+        there is a mechanical explosion. The ship has lived for 29 years (made
+        in 1948 at erlanson and skank shipyards in Malmo) and was renovated in
+        1970. Bad weather and fatigue of the ship's structure may have
+        contributed to the accident, but this is only speculation. There were no
+        reports of accidents with other vessels in that area that day, so there
+        was no possibility of collision with other vessels. There is a
+        possibility of collision with the wreckage, but this cannot be
+        confirmed. The only survivor couldn't tell us why the zimtrum sank. It
+        seems that the speed of the ship's sinking is very fast. This theory can
+        be supported by a lot of debris. However, the specific cause of the
+        cracking could not be determined. No drastic weather changes were
+        reported in the radio navigation signal area that day. Survivors'
+        estimates of the weather based on their impressions are unreliable.
+        Weather was at best one of the factors that led to the sinking of the
+        ship. The reason may be inside the ship. The explosion of the boiler may
+        be serious, but the survivors believe that there is a mechanical
+        explosion. The ship has lived for 29 years (made in 1948 at erlanson and
+        skank shipyards in Malmo) and was renovated in 1970. Bad weather and
+        fatigue of the ship's structure may have contributed to the accident,
+        but this is only speculation. There were no reports of accidents with
+        other vessels in that area that day, so there was no possibility of
+        collision with other vessels. There is a possibility of collision with
+        the wreckage, but this cannot be confirmed. The only survivor couldn't
+        tell us why the zimtrum sank. It seems that the speed of the ship's
+        sinking is very fast. This theory can be supported by a lot of debris.
+        However, the specific cause of the cracking could not be determined. No
+        drastic weather changes were reported in the radio navigation signal
+        area that day. Survivors' estimates of the weather based on their
+        impressions are unreliable. Weather was at best one of the factors that
+        led to the sinking of the ship. The reason may be inside the ship. The
+        explosion of the boiler may be serious, but the survivors believe that
+        there is a mechanical explosion. The ship has lived for 29 years (made
+        in 1948 at erlanson and skank shipyards in Malmo) and was renovated in
+        1970. Bad weather and fatigue of the ship's structure may have
+        contributed to the accident, but this is only speculation. There were no
+        reports of accidents with other vessels in that area that day, so there
+        was no possibility of collision with other vessels. There is a
+        possibility of collision with the wreckage, but this cannot be
+        confirmed. The only survivor couldn't tell us why the zimtrum sank. It
+        seems that the speed of the ship's sinking is very fast. This theory can
+        be supported by a lot of debris. However, the specific cause of the
+        cracking could not be determined. No drastic weather changes were
+        reported in the radio navigation signal area that day. Survivors'
+        estimates of the weather based on their impressions are unreliable.
+        Weather was at best one of the factors that led to the sinking of the
+        ship. The reason may be inside the ship. The explosion of the boiler may
+        be serious, but the survivors believe that there is a mechanical
+        explosion. The ship has lived for 29 years (made in 1948 at erlanson and
+        skank shipyards in Malmo) and was renovated in 1970. Bad weather and
+        fatigue of the ship's structure may have contributed to the accident,
+        but this is only speculation. There were no reports of accidents with
+        other vessels in that area that day, so there was no possibility of
+        collision with other vessels. There is a possibility of collision with
+        the wreckage, but this cannot be confirmed. The only survivor couldn't
+        tell us why the zimtrum sank. It seems that the speed of the ship's
+        sinking is very fast. This theory can be supported by a lot of debris.
+        However, the specific cause of the cracking could not be determined. No
+        drastic weather changes were reported in the radio navigation signal
+        area that day. Survivors' estimates of the weather based on their
+        impressions are unreliable. Weather was at best one of the factors that
+        led to the sinking of the ship. The reason may be inside the ship. The
+        explosion of the boiler may be serious, but the survivors believe that
+        there is a mechanical explosion. The ship has lived for 29 years (made
+        in 1948 at erlanson and skank shipyards in Malmo) and was renovated in
+        1970. Bad weather and fatigue of the ship's structure may have
+        contributed to the accident, but this is only speculation. There were no
+        reports of accidents with other vessels in that area that day, so there
+        was no possibility of collision with other vessels. There is a
+        possibility of collision with the wreckage, but this cannot be
+        confirmed.
+      </p>
+      <div id="shang"></div>
+    </section>
+    <script type="text/javascript">
+      let shang = document.getElementById("shang");
+      window.onmousemove = function (e) {
+        shang.style.width = e.clientX + "px";
+      };
+    </script>
+  </body>
+</html>
