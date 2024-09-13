@@ -7,6 +7,7 @@ import { i18n } from "/@/i18n/index";
 import other from "/@/utils/other";
 
 import ElementPlus from "element-plus";
+
 import "/@/theme/index.scss";
 import VueGridLayout from "vue-grid-layout";
 
@@ -14,9 +15,13 @@ import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 import "bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css";
 
+//全局导入自定义组件
+import ComponentRegister from "./plugins/component.js";
+
 const app = createApp(App);
 
 directive(app);
+
 other.elSvg(app);
 
 app
@@ -25,4 +30,5 @@ app
   .use(ElementPlus)
   .use(i18n)
   .use(VueGridLayout)
+  .use(ComponentRegister)
   .mount("#app");

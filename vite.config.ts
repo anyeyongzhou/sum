@@ -4,6 +4,7 @@ import { defineConfig, loadEnv, ConfigEnv } from "vite";
 import vueSetupExtend from "vite-plugin-vue-setup-extend-plus";
 import viteCompression from "vite-plugin-compression";
 import { buildConfig } from "./src/utils/build";
+import AutoImport from "unplugin-auto-import/vite";
 
 const pathResolve = (dir: string) => {
   return resolve(__dirname, ".", dir);
@@ -22,6 +23,10 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
       vueSetupExtend(),
       viteCompression(),
       JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null,
+      AutoImport({
+        imports: ["vue"],
+        dts: "src/auto-import.d.ts",
+      }),
     ],
     root: process.cwd(),
     resolve: { alias },
