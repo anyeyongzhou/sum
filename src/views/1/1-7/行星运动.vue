@@ -15,9 +15,6 @@
             href="https://github.com/chokcoco/css3-"
             target="_blank"
           >
-            <img
-              src="http://chokcoco.github.io/demo/curveJS/images/forkme.png"
-            />
           </a>
           <div class="demo-perspective-photo">
             <div id="contentContainer">
@@ -161,8 +158,6 @@ import pic5 from "/@/assets/beauty/5/5-1.jpg";
 import pic6 from "/@/assets/beauty/6/6-1.jpg";
 /* 不改的代码 begin */
 import { useRoute } from "vue-router";
-import { marked } from "marked";
-import "highlight.js/styles/monokai-sublime.css";
 
 const route = useRoute();
 const flag = ref(true);
@@ -185,11 +180,6 @@ const handleClick = async () => {
   }
 };
 
-const markdownContent = ref(null);
-onMounted(async () => {
-  const mdFileContent = await import("./code.md?raw");
-  markdownContent.value = marked(mdFileContent.default);
-});
 /* 不改的代码 end */
 </script>
 
