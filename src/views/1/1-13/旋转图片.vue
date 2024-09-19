@@ -29,7 +29,7 @@
         </div>
       </template>
     </div>
-    <div class="tip" v-marked:hl="markdownContent"></div>
+    <!-- <div class="tip" v-marked:hl="markdownContent"></div> -->
     <div class="button">
       <el-button type="primary" @click="handleClick">{{
         buttonContent
@@ -67,12 +67,6 @@ const handleClick = async () => {
     }
   }
 };
-
-const markdownContent = ref(null);
-onMounted(async () => {
-  const mdFileContent = await import("./code.md?raw");
-  markdownContent.value = marked(mdFileContent.default);
-});
 
 const imgList = ref([img1, img2, img3, img4, img5]);
 </script>
