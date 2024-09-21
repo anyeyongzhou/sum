@@ -157,7 +157,7 @@ const { options } = useECharts(
   }
 
   .tip {
-    width: 600px;
+    width: 30%;
     min-height: 100px;
     max-height: 600px;
     position: fixed;

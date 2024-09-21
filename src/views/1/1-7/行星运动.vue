@@ -1751,7 +1751,7 @@ const handleClick = async () => {
     }
 
     .demo-perspective-photo .circle1 {
-      width: 600px;
+      width: 30%;
       height: 600px;
       margin: -300px 0 0 -300px;
       -webkit-transform: rotateX(90deg);
@@ -1956,7 +1956,7 @@ const handleClick = async () => {
   }
 
   .tip {
-    width: 600px;
+    width: 30%;
     min-height: 100px;
     max-height: 600px;
     position: fixed;
