@@ -4,25 +4,35 @@
       <template v-if="flag">
         <Title
           :orderNum="1"
-          context="滑动导航栏"
+          context="element-plus ElButton封装loading效果"
           :size="1"
           :color="9"
           :wight="1"
           :backgroundColor="3"
         />
-        <div class="navigation">
-          <div
-            href="#"
-            class="label"
-            :class="currentIndex == index ? 'change' : ''"
-            v-for="(item, index) in aList"
-            :key="index"
-            @click="handleClickNav(index)"
-          >
-            {{ item }}
-          </div>
-          <div class="line" :style="{ left: linePosition }"></div>
-        </div>
+        <MyButton type="primary" @click="handler1"> 按钮1 </MyButton>
+        <MyButton @click="asyncFn"> 按钮2 </MyButton>
+        <MyButton type="primary" plain @click="handler3">
+          <template #loading>
+            <div class="custom-loading">
+              <svg class="circular" viewBox="-10, -10, 50, 50">
+                <path
+                  class="path"
+                  d="
+            M 30 15
+            L 28 17
+            M 25.61 25.61
+            A 15 15, 0, 0, 1, 15 30
+            A 15 15, 0, 1, 1, 27.99 7.5
+            L 15 15
+          "
+                  style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"
+                />
+              </svg>
+            </div>
+          </template>
+          按钮3
+        </MyButton>
       </template>
       <template v-else>
         <div class="code">
@@ -40,6 +50,7 @@
 </template>
 
 <script setup>
+import MyButton from "./components/MyButton.vue";
 /* 不改的代码 begin */
 import { useRoute } from "vue-router";
 import { marked } from "marked";
@@ -78,18 +89,18 @@ onMounted(async () => {
     .replace(/(<img[^>]*)(>)/, '$1 style="width:100%;height:100%;"$2');
 });
 /* 不改的代码 end */
+const asyncFn = () =>
+  new Promise(resolve => {
+    setTimeout(resolve, 3000);
+  });
 
-const aList = reactive(["HOME", "ARTICLE", "COMMENT", "INTRODUCE", "OTHER"]);
-let currentIndex = ref(0);
-
-const handleClickNav = index => {
-  currentIndex.value = index;
+const handler1 = async () => {
+  await asyncFn();
 };
 
-// 计算 line 的位置
-const linePosition = computed(() => {
-  return `${48 + currentIndex.value * 195}px`;
-});
+const handler3 = () => {
+  return asyncFn();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -106,50 +117,23 @@ const linePosition = computed(() => {
     padding: 10px;
     border: 1px solid black;
 
-    .navigation {
-      position: relative;
-      width: 100%;
-      height: 50px;
-      background-color: rgb(30, 45, 112);
-      border-radius: 10px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-      box-shadow: 1.5px 2px 2px rgb(0, 0, 0),
-        inset 3px 3px 4px rgba(255, 255, 255, 0.1);
-      .label {
-        width: 100px;
-        height: 30px;
-        text-align: center;
-        line-height: 30px;
-        color: #fff;
-        text-decoration: none;
-        font-size: 14px;
-        transition: color 0.3s ease; /* 平滑颜色变化 */
-      }
-      .change {
-        color: #0ff;
-        border-radius: 10px;
-        box-shadow: inset 3px 3px 4px rgb(0, 0, 0),
-          1.5px 2px 2px rgba(255, 255, 255, 0.1);
-      }
-      div:hover {
-        color: #0ff;
-        cursor: pointer;
-      }
-      .line {
-        position: absolute;
-        left: 48px; //244
-        bottom: 0;
-        height: 3px;
-        width: 100px;
-        background-color: rgb(66, 104, 207);
-        border-radius: 2px;
-        transition: left 0.3s ease; /* 平滑位置变化 */
-      }
+    /* 编写CSS begin */ /* 编写CSS end */
+    .el-button .custom-loading .circular {
+      margin-right: 6px;
+      width: 18px;
+      height: 18px;
+      animation: loading-rotate 2s linear infinite;
     }
 
+    .el-button .custom-loading .circular .path {
+      animation: loading-dash 1.5s ease-in-out infinite;
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: 0;
+      stroke-width: 2;
+      stroke: var(--el-button-text-color);
+      stroke-linecap: round;
+    }
+    /* 编写CSS end */
     .code {
       padding: 20px;
       border: 1px solid gray;

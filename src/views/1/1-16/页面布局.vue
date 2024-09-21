@@ -151,7 +151,13 @@ const handleClick = async () => {
 const markdownContent = ref(null);
 onMounted(async () => {
   const mdFileContent = await import("./code.md?raw");
-  markdownContent.value = marked(mdFileContent.default);
+  const replaceUrl = `../src/views/${route.name.split("-").at(0)}/${
+    route.fullPath
+  }`;
+  const markdownText = marked(mdFileContent.default);
+  markdownContent.value = markdownText
+    .replace(/src="(images\/code\/\d+\.png)"/, `src="${replaceUrl}/$1"`)
+    .replace(/(<img[^>]*)(>)/, '$1 style="width:100%;height:100%;"$2');
 });
 </script>
 
