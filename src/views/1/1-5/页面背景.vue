@@ -2,14 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Title
-          :orderNum="1"
-          context="利用radial-gradient和background-size实现各种背景"
-          :size="1"
-          :color="9"
-          :wight="1"
-          :backgroundColor="3"
-        />
+        <Heads :context="route.meta.title" />
         <div class="bg bg1"></div>
         <div class="bg bg2"></div>
         <div class="bg bg3"></div>

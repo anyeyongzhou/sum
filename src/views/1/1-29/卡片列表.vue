@@ -2,6 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
+        <Heads :context="route.meta.title" />
         <section class="layout-page-box">
           <div class="item-box card-0">
             <span class="card-icon">A</span>

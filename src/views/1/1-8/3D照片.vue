@@ -2,6 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
+        <Heads :context="route.meta.title" />
         <div>
           <div class="containers">
             <div class="stage">

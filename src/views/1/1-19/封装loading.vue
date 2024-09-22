@@ -2,14 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Title
-          :orderNum="1"
-          context="element-plus ElButton封装loading效果"
-          :size="1"
-          :color="9"
-          :wight="1"
-          :backgroundColor="3"
-        />
+        <Heads :context="route.meta.title" />
         <MyButton type="primary" @click="handler1"> 按钮1 </MyButton>
         <MyButton @click="asyncFn"> 按钮2 </MyButton>
         <MyButton type="primary" plain @click="handler3">

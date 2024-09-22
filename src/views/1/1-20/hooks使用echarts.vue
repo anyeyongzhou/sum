@@ -2,14 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Title
-          :orderNum="1"
-          context="echarts"
-          :size="1"
-          :color="9"
-          :wight="1"
-          :backgroundColor="3"
-        />
+        <Heads :context="route.meta.title" />
         <div ref="chartRef" style="width: 100%; height: 400px"></div>
       </template>
       <template v-else>

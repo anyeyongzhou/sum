@@ -2,14 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Title
-          :orderNum="1"
-          context="3D正方体"
-          :size="1"
-          :color="9"
-          :wight="1"
-          :backgroundColor="3"
-        />
+        <Heads :context="route.meta.title" />
         <div class="cube">
           <ul class="cube-inner">
             <li class="top"></li>

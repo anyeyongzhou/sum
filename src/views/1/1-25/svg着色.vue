@@ -2,13 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Heads
-          context="svg改变颜色"
-          :size="1"
-          :color="9"
-          :wight="1"
-          :backgroundColor="3"
-        />
+        <Heads :context="route.meta.title" />
         <button @click="toggleColor">切换svg颜色</button>
         <div style="color: blue">
           <svg

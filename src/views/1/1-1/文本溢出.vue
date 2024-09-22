@@ -2,14 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Title
-          :orderNum="1"
-          context="文本溢出"
-          :size="1"
-          :color="9"
-          :wight="1"
-          :backgroundColor="3"
-        />
+        <Heads :context="route.meta.title" />
         <Title
           :orderNum="1"
           context="单行文本溢出尾部打点"

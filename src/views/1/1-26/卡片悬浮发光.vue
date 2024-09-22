@@ -2,14 +2,7 @@
   <div class="home">
     <div class="containers">
       <template v-if="flag">
-        <Heads
-          :orderNum="1"
-          context="卡片悬浮发光"
-          :size="1"
-          :color="9"
-          :wight="1"
-          :backgroundColor="3"
-        />
+        <Heads :context="route.meta.title" />
         <div class="container">
           <!-- 方块盒子 -->
           <div class="item" ref="cardRef1"></div>

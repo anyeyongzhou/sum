@@ -2,7 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Heads context="复选框交互效果" />
+        <Heads :context="route.meta.title" />
         <div class="ui-layout-page">
           <h1>请选择关注类型</h1>
           <div class="ui-checkbox">

@@ -2,13 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Heads
-          :orderNum="1"
-          context="炫酷开关交互效果"
-          :size="1"
-          :color="8"
-          :wight="1"
-        />
+        <Heads :context="route.meta.title" />
         <Title
           :orderNum="1"
           context="效果1"

@@ -2,13 +2,8 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
-        <Title
-          :orderNum="1"
-          context="元素宽度不够，长串单词不会被截断"
-          :size="1"
-          :color="9"
-          :wight="1"
-          :backgroundColor="3"
+        <Heads
+          :context="route.meta.title + ':元素宽度不够，长串单词不会被截断'"
         />
         <Title
           :orderNum="1"

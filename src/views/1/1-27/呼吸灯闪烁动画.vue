@@ -2,7 +2,7 @@
   <div class="home">
     <div class="containers">
       <template v-if="flag">
-        <Heads context="呼吸灯闪烁动画" />
+        <Heads :context="route.meta.title" />
         <Title
           :orderNum="1"
           context="效果1"

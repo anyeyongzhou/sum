@@ -2,6 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
+        <Heads :context="route.meta.title" />
         <Title
           :orderNum="1"
           context="列表向下滚动"

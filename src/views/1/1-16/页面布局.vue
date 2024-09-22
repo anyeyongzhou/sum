@@ -2,6 +2,7 @@
   <div class="home">
     <div class="container">
       <template v-if="flag">
+        <Heads :context="route.meta.title + ':左边固定，右边自适应宽度'" />
         <Title
           :orderNum="1"
           context="左边固定，右边自适应宽度"
