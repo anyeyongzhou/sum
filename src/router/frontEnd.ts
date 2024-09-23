@@ -74,7 +74,8 @@ export function setFilterRouteEnd() {
   for (let item of Object.keys(dynamicViewsModules)) {
     let nameList = item.split("/");
     let name = nameList[nameList.length - 2];
-    if (name === "login" || name === "components") {
+    const nameLists = ["login", "components"];
+    if (nameLists.includes(name)) {
       continue;
     }
     let path = "/" + nameList[nameList.length - 2];
