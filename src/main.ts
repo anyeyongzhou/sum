@@ -15,6 +15,8 @@ import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 import "bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css";
 
+import Vue3Marquee from "vue3-marquee";
+
 //全局导入自定义组件
 import ComponentRegister from "./plugins/component.js";
 
@@ -31,4 +33,5 @@ app
   .use(i18n)
   .use(VueGridLayout)
   .use(ComponentRegister)
+  .use(Vue3Marquee)
   .mount("#app");
