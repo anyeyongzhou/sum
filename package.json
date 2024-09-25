@@ -39,6 +39,7 @@
 		"marked": "^14.1.2",
 		"mitt": "^3.0.0",
 		"nprogress": "^0.2.0",
+		"number-flip": "^1.2.3",
 		"pinia": "^2.0.34",
 		"print-js": "^1.6.0",
 		"qrcodejs2-fixes": "^0.0.2",
