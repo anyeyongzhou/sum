@@ -3,12 +3,13 @@
     <div class="container">
       <template v-if="flag">
         <Heads :context="route.meta.title" />
-        <Vue3Marquee :duration="200">
+        <Vue3Marquee :duration="200" :pause="pauseFlag" pauseOnHover>
           <template v-for="(item, index) in imgList" :key="index">
             <img :src="item" style="width: 200px; height: 300px" />
           </template>
         </Vue3Marquee>
         <Vue3Marquee>{{ textContent }} </Vue3Marquee>
+        <el-button type="primary" @click="stopClick">暂时滚动</el-button>
       </template>
       <template v-else>
         <div class="code">
@@ -69,6 +70,12 @@ const textContent =
   "阿达是的sad萨达为傲i撒旦撒旦撒第三次VS代发收费烦死哦哦您看方便不收费飞飞飞发给对方滚动条融入到突然很尬发哈感受到风格双丰收苟富贵合法尴尬的";
 
 const imgList = new Array();
+
+const pauseFlag = ref(false);
+
+const stopClick = () => {
+  pauseFlag.value = !pauseFlag.value;
+};
 
 onMounted(async () => {
   let imageList = import.meta.glob("/src/assets/beauty/*/*.*", { eager: true });
