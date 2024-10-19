@@ -13,14 +13,8 @@
     </div>
   </transition>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      show: false,
-    };
-  },
-};
+<script setup>
+const show = ref(false);
 </script>
 <style>
 .fade-enter-active,
