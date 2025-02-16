@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <div class="designer-container">
       <div class="button-box">
@@ -108,4 +108,4 @@ const handleDownload = () => {
   height: 100%;
   overflow: auto;
 }
-</style>
+</style> -->
