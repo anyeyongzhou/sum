@@ -10,7 +10,7 @@
 		"lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
 	},
 	"dependencies": {
-		"@element-plus/icons-vue": "^2.1.0",
+		"@element-plus/icons-vue": "^2.3.1",
 		"@types/marked": "^6.0.0",
 		"@wangeditor/editor": "^5.1.23",
 		"@wangeditor/editor-for-vue": "^5.1.12",
@@ -24,7 +24,7 @@
 		"echarts-gl": "^2.0.9",
 		"echarts-liquidfill": "^3.1.0",
 		"echarts-wordcloud": "^2.1.0",
-		"element-plus": "^2.3.3",
+		"element-plus": "^2.9.7",
 		"gsap": "^3.12.5",
 		"gsap-trial": "^3.12.5",
 		"highlight.js": "^11.10.0",
