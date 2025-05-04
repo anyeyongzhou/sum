@@ -1,82 +1,112 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
-    </div>
+  <div class="canvas-container">
+    <canvas ref="canvas"></canvas>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref, onMounted, onUnmounted } from "vue";
 
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
+const canvas = ref(null);
+let ctx = null;
+let kuan = 0;
+let gao = 0;
+const num = 25;
+let arr = [];
+const colors = [
+  "#2196F3",
+  "#1976D2",
+  "#00BCD4",
+  "#4CAF50",
+  "#FF5252",
+  "#E040FB",
+];
+let mouseX = 0;
+let mouseY = 0;
 
-const effect = ref(true);
-const buttonContent = ref("查看代码");
-
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
+const resizeCanvas = () => {
+  if (canvas.value) {
+    kuan = canvas.value.width = window.innerWidth;
+    gao = canvas.value.height = window.innerHeight;
+    mouseX = kuan / 2;
+    mouseY = gao / 2;
+    initialize();
+  }
 };
 
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
+const initialize = () => {
+  arr = [];
+  for (let i = 0; i < num; i++) {
+    arr.push({
+      r: Math.random() * (5 - 3) + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * 2 * Math.PI,
+      distance: Math.random() * (75 - 40) + 40,
+      lastMouse: { x: kuan / 2, y: gao / 2 },
+    });
+  }
+};
+
+const draw = last => {
+  const yuan = arr[last.i];
+  ctx.beginPath();
+  ctx.strokeStyle = yuan.color;
+  ctx.lineWidth = yuan.r;
+  ctx.moveTo(last.x, last.y);
+  ctx.lineTo(yuan.x, yuan.y);
+  ctx.stroke();
+  ctx.closePath();
+};
+
+const update = () => {
+  ctx.fillStyle = "rgba(0,0,0,0.1)";
+  ctx.fillRect(0, 0, kuan, gao);
+  for (let i = 0; i < num; i++) {
+    const last = { x: arr[i].x, y: arr[i].y, i: i };
+    arr[i].lastMouse.x += (mouseX - arr[i].lastMouse.x) * 0.05;
+    arr[i].lastMouse.y += (mouseY - arr[i].lastMouse.y) * 0.05;
+    arr[i].rot += 0.1;
+    arr[i].x = arr[i].lastMouse.x + Math.cos(arr[i].rot) * arr[i].distance;
+    arr[i].y = arr[i].lastMouse.y + Math.sin(arr[i].rot) * arr[i].distance;
+    draw(last);
   }
 };
 
 onMounted(() => {
-  loadHTML();
+  ctx = canvas.value.getContext("2d");
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+  window.addEventListener("mousemove", e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  const animationLoop = () => {
+    update();
+    requestAnimationFrame(animationLoop);
+  };
+  animationLoop();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", resizeCanvas);
 });
 </script>
 
-<style lang="scss" scoped>
-.home {
-  height: 100%;
+<style scoped>
+.canvas-container {
   width: 100%;
-  background-color: #fff;
+  height: 100vh;
+  background-color: rgb(0, 0, 0);
   position: relative;
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
-  }
-
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
-  }
+canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -1,82 +1,152 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
-    </div>
+  <div class="canvas-container">
+    <h1>暗夜永昼</h1>
+    <canvas ref="canvas"></canvas>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref, onMounted, onUnmounted } from "vue";
 
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
+const canvas = ref(null);
+let ctx = null;
+let arr = [];
+const num = 60;
+let xZou, yZou, temp;
 
-const effect = ref(true);
-const buttonContent = ref("查看代码");
-
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
+const resizeCanvas = () => {
+  if (canvas.value) {
+    canvas.value.width = window.innerWidth;
+    canvas.value.height = window.innerHeight;
+    arr = [];
+    initialize();
+  }
 };
 
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
+const initialize = () => {
+  for (let i = 0; i < num; i++) {
+    arr.push({
+      x: 10 + Math.random() * (canvas.value.width - 20),
+      y: 10 + Math.random() * (canvas.value.height - 20),
+      r: 10,
+      dx: 10 * Math.random() - 5,
+      dy: 10 * Math.random() - 5,
+      color: "rgba(7, 156, 255,1)",
+    });
+  }
+};
+
+const draw = () => {
+  ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+  for (let i = 0; i < num; i++) {
+    const yuan = arr[i];
+    ctx.beginPath();
+    ctx.arc(yuan.x, yuan.y, yuan.r, 0, Math.PI * 2, false);
+    ctx.fillStyle = yuan.color;
+    ctx.fill();
+
+    for (let j = i; j < num; j++) {
+      if (
+        Math.abs(yuan.x - arr[j].x) < 150 &&
+        Math.abs(yuan.y - arr[j].y) < 150
+      ) {
+        ctx.beginPath();
+        if (
+          Math.abs(yuan.x - xZou) < 150 &&
+          Math.abs(yuan.y - yZou) < 150 &&
+          temp
+        ) {
+          ctx.moveTo(yuan.x, yuan.y);
+          ctx.lineTo(xZou, yZou);
+        }
+        ctx.lineTo(arr[j].x, arr[j].y);
+        ctx.closePath();
+        const tm =
+          Math.sqrt(
+            Math.abs(yuan.x - arr[j].x) ** 2 + Math.abs(yuan.y - arr[j].y) ** 2
+          ) / 212;
+        ctx.strokeStyle = `rgba(7, 156, 255,${1 - tm})`;
+        ctx.stroke();
+      }
     }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
+  }
+};
+
+const updates = () => {
+  for (let i = 0; i < num; i++) {
+    if (
+      Math.abs(arr[i].x - xZou) < 150 &&
+      Math.abs(arr[i].y - yZou) < 150 &&
+      temp
+    ) {
+      arr[i].x += -(arr[i].x - xZou) / (10 * Math.random() + 20);
+      arr[i].y += -(arr[i].y - yZou) / (10 * Math.random() + 20);
+    } else {
+      arr[i].x += arr[i].dx;
+      arr[i].y += arr[i].dy;
+    }
+
+    if (arr[i].x <= arr[i].r || arr[i].x >= canvas.value.width - arr[i].r) {
+      arr[i].dx = -arr[i].dx;
+    }
+    if (arr[i].y <= arr[i].r || arr[i].y >= canvas.value.height - arr[i].r) {
+      arr[i].dy = -arr[i].dy;
+    }
   }
 };
 
 onMounted(() => {
-  loadHTML();
+  ctx = canvas.value.getContext("2d");
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+  canvas.value.addEventListener("mousemove", e => {
+    xZou = e.clientX;
+    yZou = e.clientY;
+    temp = 1;
+  });
+  canvas.value.addEventListener("mouseout", () => {
+    temp = 0;
+  });
+
+  const animationLoop = () => {
+    draw();
+    updates();
+    requestAnimationFrame(animationLoop);
+  };
+  animationLoop();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", resizeCanvas);
 });
 </script>
 
-<style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+<style scoped>
+.canvas-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(11, 10, 46);
   position: relative;
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
-  }
+h1 {
+  font-family: "fangsong";
+  position: absolute;
+  font-size: 5em;
+  color: rgb(17, 167, 226);
+  transform: translateX(40px);
+  text-shadow: 0 0 10px rgb(38, 17, 226), 0 0 20px rgb(38, 17, 226),
+    0 0 30px rgb(38, 17, 226);
+  user-select: none;
+}
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
-  }
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
