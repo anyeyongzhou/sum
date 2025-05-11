@@ -1,82 +1,88 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
+  <div
+    class="container"
+    :style="{ backgroundColor: bodyColor, color: textColor }"
+  >
+    <div class="kaiguan" @click="toggleTheme">
+      <div :class="buttonClass"></div>
     </div>
+    <h1>Life of Pi</h1>
+    <p>
+      &emsp;&emsp;&emsp; He lives in Scarborough. He's a small, slim man – no
+      more than five foot five. Dark hair, dark eyes. Hair greying at the
+      temples. Can't be older than forty. Leasing coffee-coloured complexion.
+      Mild fall weather, yet puts on a big winter parka with fur-lined hood for
+      the walk to the diner.
+      <!-- Content truncated for brevity -->
+    </p>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref } from "vue";
 
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
+const isDarkTheme = ref(false);
 
-const effect = ref(true);
-const buttonContent = ref("查看代码");
+const bodyColor = computed(() =>
+  isDarkTheme.value ? "rgb(7, 7, 29)" : "white"
+);
+const textColor = computed(() => (isDarkTheme.value ? "white" : "black"));
+const buttonClass = computed(() => (isDarkTheme.value ? "hei" : "bai"));
 
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
+const toggleTheme = () => {
+  isDarkTheme.value = !isDarkTheme.value;
 };
-
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
-  }
-};
-
-onMounted(() => {
-  loadHTML();
-});
 </script>
 
 <style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+.container {
+  transition: all 1s;
   position: relative;
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
-  }
+.kaiguan {
+  position: absolute;
+  top: 20px;
+  right: 50px;
+  width: 40px;
+  height: 20px;
+  border: 2px solid black;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 3s;
+}
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
-  }
+.bai {
+  position: absolute;
+  top: 1.5px;
+  left: 2px;
+  height: 13px;
+  width: 13px;
+  background-color: rgb(0, 0, 0);
+  border-radius: 50%;
+  transition: all 1s;
+}
+
+.hei {
+  position: absolute;
+  top: 1.5px;
+  right: 2px;
+  height: 13px;
+  width: 13px;
+  background-color: rgb(11, 243, 81);
+  border-radius: 50%;
+  transition: all 1s;
+}
+
+h1 {
+  margin: 100px auto;
+  width: 1000px;
+  text-align: center;
+}
+
+p {
+  margin: -60px auto;
+  width: 1100px;
+  text-align-last: center;
 }
 </style>

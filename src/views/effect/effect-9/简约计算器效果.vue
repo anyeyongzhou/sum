@@ -1,82 +1,143 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
+  <form class="kuang">
+    <input type="text" class="result" v-model="result" readonly />
+    <div class="anniu">
+      <span
+        v-for="button in buttons"
+        :key="button"
+        @click="updateResult(button)"
+      >
+        {{ button }}
+      </span>
     </div>
-  </div>
+    <div class="zero" @click="clearResult">I'll clear it (一键清空)</div>
+  </form>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref } from "vue";
 
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
+const result = ref("");
+const buttons = [
+  "7",
+  "8",
+  "9",
+  "+",
+  "4",
+  "5",
+  "6",
+  "-",
+  "1",
+  "2",
+  "3",
+  "*",
+  "0",
+  ".",
+  "/",
+];
 
-const effect = ref(true);
-const buttonContent = ref("查看代码");
-
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
-};
-
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
+const updateResult = value => {
+  if (value === "=") {
+    try {
+      result.value = eval(result.value);
+    } catch {
+      result.value = "Error";
     }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
+  } else {
+    result.value += value;
   }
 };
 
-onMounted(() => {
-  loadHTML();
-});
+const clearResult = () => {
+  result.value = "";
+};
 </script>
 
 <style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+.kuang {
+  width: 300px !important;
+  height: 400px;
+  background-color: rgb(172, 166, 166);
   position: relative;
+  background-image: url(6.1.png);
+  background-size: 100% 100%;
+  border-radius: 10px;
+  box-shadow: 4px 4px 6px rgb(6, 50, 70);
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
-  }
+.result {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 260px;
+  height: 60px;
+  padding: 20px;
+  font-size: 23px;
+  text-align: right;
+  letter-spacing: 1px;
+  outline: none;
+  background-color: rgb(166, 219, 190);
+  opacity: 0.9;
+}
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
-  }
+.anniu {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  width: 260px;
+  height: 240px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-content: space-between;
+  cursor: pointer;
+}
+
+.anniu span {
+  width: 60px;
+  height: 55px;
+  color: rgb(34, 36, 58);
+  line-height: 55px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: rgb(248, 247, 247);
+  border-radius: 5px;
+  box-shadow: inset 2px 2px 3px rgb(65, 64, 64),
+    inset -2px -2px 3px rgb(88, 86, 86);
+}
+
+.anniu span:hover {
+  opacity: 0.8;
+}
+
+.anniu span:active {
+  opacity: 1;
+}
+
+.zero {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  width: 260px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+  text-align: center;
+  letter-spacing: 1px;
+  border-radius: 15px;
+  background-color: rgb(248, 247, 247);
+  box-shadow: inset 1px 1px 1px rgb(65, 64, 64),
+    inset -1px -1px 1px rgb(88, 86, 86);
+  cursor: pointer;
+  opacity: 0.4;
+}
+
+.zero:hover {
+  opacity: 0.9;
+}
+
+.zero:active {
+  opacity: 0.5;
 }
 </style>

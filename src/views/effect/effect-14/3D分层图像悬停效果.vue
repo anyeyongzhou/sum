@@ -1,82 +1,92 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
+  <div class="container">
+    <div class="box">
+      <img
+        v-for="(image, index) in images"
+        :key="index"
+        :src="image"
+        alt="3D effect"
+      />
+      <span></span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
-
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
-
-const effect = ref(true);
-const buttonContent = ref("查看代码");
-
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
-};
-
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
-  }
-};
-
-onMounted(() => {
-  loadHTML();
-});
+import img1 from "/@/assets/beauty/1/1-1.jpg";
+import img2 from "/@/assets/beauty/1/1-2.jpg";
+import img3 from "/@/assets/beauty/1/1-3.jpg";
+import img4 from "/@/assets/beauty/1/1-4.jpg";
+import img5 from "/@/assets/beauty/1/1-5.jpg";
+const images = [img1, img2, img3, img4, img5];
 </script>
 
 <style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+.container {
   position: relative;
+  perspective: 2000px;
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
+.box {
+  position: relative;
+  width: 220px;
+  height: 360px;
+  transition: all 0.5s;
+  transform-style: preserve-3d;
+
+  &:hover {
+    transform: rotateX(50deg) rotateZ(-50deg);
   }
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
+  img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 3px rgb(61, 138, 226);
+    transition: all 1.5s;
+    transform: translateZ(0px);
+
+    &:nth-child(2) {
+      &:hover {
+        transform: translateX(-10px) translateY(10px) translateZ(-10px);
+        opacity: 0.8;
+      }
+    }
+
+    &:nth-child(3) {
+      &:hover {
+        transform: translateX(-20px) translateY(20px) translateZ(-20px);
+        opacity: 0.6;
+      }
+    }
+
+    &:nth-child(4) {
+      &:hover {
+        transform: translateX(-30px) translateY(30px) translateZ(-30px);
+        opacity: 0.4;
+      }
+    }
+
+    &:nth-child(5) {
+      &:hover {
+        transform: translateX(-40px) translateY(40px) translateZ(-40px);
+        opacity: 0.2;
+      }
+    }
+  }
+
+  span {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: all 1.5s;
+    opacity: 0.1;
+
+    &:hover {
+      transform: translateX(-50px) translateY(50px) translateZ(-50px);
+      box-shadow: 0 0 40px rgb(41, 151, 253);
+      background-color: rgb(41, 151, 253);
+    }
   }
 }
 </style>

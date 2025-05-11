@@ -1,82 +1,94 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
+  <div class="frame" @mousemove="handleMouseMove">
+    <img :src="backgroundImage" width="100%" />
+    <div
+      class="circle"
+      :style="{
+        left: circlePosition.x + 'px',
+        top: circlePosition.y + 'px',
+        opacity: isHovered ? 1 : 0,
+      }"
+    >
+      <img :src="magnifiedImage" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref } from "vue";
+import backgroundImage from "/@/assets/beauty/1/1-7.jpg";
+import magnifiedImage from "/@/assets/beauty/1/1-7.jpg";
 
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
+const circlePosition = ref({ x: 0, y: 0 });
+const isHovered = ref(false);
 
-const effect = ref(true);
-const buttonContent = ref("查看代码");
+const handleMouseMove = e => {
+  const frame = e.currentTarget;
+  const circle = frame.querySelector(".circle");
 
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
+  const x = e.clientX - frame.getBoundingClientRect().left;
+  const y = e.clientY - frame.getBoundingClientRect().top;
+
+  // Calculate circle position
+  let moveX = x - circle.offsetWidth / 2;
+  let moveY = y - circle.offsetHeight / 2;
+
+  // Constrain circle within the frame
+  if (moveX < 0) moveX = 0;
+  if (moveX > frame.offsetWidth - circle.offsetWidth)
+    moveX = frame.offsetWidth - circle.offsetWidth;
+  if (moveY < 0) moveY = 0;
+  if (moveY > frame.offsetHeight - circle.offsetHeight)
+    moveY = frame.offsetHeight - circle.offsetHeight;
+
+  circlePosition.value = { x: moveX, y: moveY };
+
+  // Calculate magnified image position
+  const picture = circle.querySelector("img");
+  const moveLeft =
+    ((moveX + circle.offsetWidth / 2) / frame.offsetWidth) *
+      picture.offsetWidth -
+    circle.offsetWidth / 2;
+  const moveTop =
+    ((moveY + circle.offsetHeight / 2) / frame.offsetHeight) *
+      picture.offsetHeight -
+    circle.offsetHeight / 2;
+
+  picture.style.left = `-${moveLeft}px`;
+  picture.style.top = `-${moveTop}px`;
+  isHovered.value = true;
 };
-
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
-  }
-};
-
-onMounted(() => {
-  loadHTML();
-});
 </script>
 
 <style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+.frame {
+  width: 800px;
+  min-height: 200px;
   position: relative;
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
-  }
+.circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  border: 5px solid rgb(0, 0, 0);
+  box-shadow: 0 0 5px rgb(0, 0, 0);
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
-  }
+.frame:hover .circle {
+  opacity: 1;
+}
+
+.circle img {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>

@@ -1,82 +1,90 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
+  <div @click="addIcon" class="container">
+    <div
+      v-for="(icon, index) in icons"
+      :key="index"
+      class="tx"
+      :style="icon.style"
+    >
+      <span></span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref } from "vue";
 
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
+const icons = ref([]);
 
-const effect = ref(true);
-const buttonContent = ref("查看代码");
+const addIcon = event => {
+  const icon = {
+    top: event.clientY - 20,
+    left: event.clientX - 20,
+    opacity: 1,
+    scale: 1,
+    color: `rgb(${255 * Math.random()}, ${255 * Math.random()}, ${
+      255 * Math.random()
+    })`,
+    style: {},
+  };
 
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
+  icons.value.push(icon);
+  moveIcons();
 };
 
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
-  }
-};
+const moveIcons = () => {
+  icons.value = icons.value
+    .map((icon, index) => {
+      if (icon.opacity <= 0) {
+        return null; // Mark for removal
+      }
+      icon.top--;
+      icon.opacity -= 0.01;
+      icon.scale += 0.02;
 
-onMounted(() => {
-  loadHTML();
-});
+      icon.style = {
+        top: `${icon.top}px`,
+        left: `${icon.left}px`,
+        color: icon.color,
+        opacity: icon.opacity,
+        transform: `scale(${icon.scale})`,
+      };
+
+      return icon;
+    })
+    .filter(Boolean); // Remove nulls
+};
 </script>
 
 <style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+@font-face {
+  font-family: "icomoon";
+  src: url("fonts/icomoon.eot");
+  src: url("fonts/icomoon.eot#iefix") format("embedded-opentype"),
+    url("fonts/icomoon.ttf") format("truetype"),
+    url("fonts/icomoon.woff") format("woff"),
+    url("fonts/icomoon.svg#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  height: 100vh;
   position: relative;
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
-  }
-
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
-  }
+.tx {
+  font-family: "icomoon";
+  position: absolute;
+  color: #000;
+  font-size: 15px;
+  user-select: none;
 }
 </style>

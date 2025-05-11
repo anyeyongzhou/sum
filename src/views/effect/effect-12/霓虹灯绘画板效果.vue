@@ -1,82 +1,128 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
-    </div>
+  <div class="particle-container" ref="container" @click="regenerateParticles">
+    <h1 class="title">暗夜永昼</h1>
+    <div
+      v-for="(particle, index) in particles"
+      :key="index"
+      class="particle"
+      :style="{
+        '--color': particle.color,
+        left: `${particle.x}px`,
+        top: `${particle.y}px`,
+      }"
+      @mouseenter="activateParticle(index)"
+    ></div>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref, onMounted } from "vue";
 
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
+const container = ref(null);
+const particles = ref([]);
 
-const effect = ref(true);
-const buttonContent = ref("查看代码");
+const colors = [
+  "#BBFF00",
+  "#FF3333",
+  "#FFFF77",
+  "#0044BB",
+  "#FF77FF",
+  "#99FFFF",
+  "#DDDDDD",
+  "#FF44AA",
+];
 
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
+const generateParticles = () => {
+  if (!container.value) return;
+
+  const containerWidth = container.value.offsetWidth;
+  const containerHeight = container.value.offsetHeight;
+
+  const particleSize = 20;
+  const cols = Math.floor(containerWidth / particleSize);
+  const rows = Math.floor(containerHeight / particleSize);
+  const totalParticles = cols * rows;
+
+  particles.value = Array.from({ length: totalParticles }, (_, i) => {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+
+    return {
+      x: col * particleSize,
+      y: row * particleSize,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      active: false,
+    };
+  });
 };
 
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
-  }
+const activateParticle = index => {
+  particles.value[index].active = true;
+  setTimeout(() => {
+    particles.value[index].active = false;
+  }, 1000);
+};
+
+const regenerateParticles = () => {
+  generateParticles();
 };
 
 onMounted(() => {
-  loadHTML();
+  generateParticles();
+  window.addEventListener("resize", generateParticles);
 });
 </script>
 
-<style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+<style scoped>
+.particle-container {
   position: relative;
+  width: 90%;
+  height: 90%;
+  background-color: rgb(0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  cursor: pointer;
+  overflow: hidden;
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
-  }
+.title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "fangsong";
+  font-size: 80px;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 10px;
+  pointer-events: none;
+  z-index: 1;
+}
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
-  }
+.particle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+}
+
+.particle::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 1px;
+  right: 1px;
+  background-color: rgba(65, 64, 64, 0.5);
+  border-radius: 50%;
+  transition: all 120s ease-out;
+}
+
+.particle:hover::before {
+  background-color: var(--color);
+  box-shadow: 0 0 2px var(--color), 0 0 4px var(--color), 0 0 6px var(--color),
+    0 0 8px var(--color);
+  transition: all 0s ease-out;
 }
 </style>

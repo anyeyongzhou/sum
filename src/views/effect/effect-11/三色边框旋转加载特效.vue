@@ -1,82 +1,87 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
+  <div class="box">
+    <div class="circle">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
+    <h5>NIGHT.</h5>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
-
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
-
-const effect = ref(true);
-const buttonContent = ref("查看代码");
-
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
-};
-
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
-  }
-};
-
-onMounted(() => {
-  loadHTML();
-});
+// No additional script needed for this animation
 </script>
 
 <style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+.box {
+  width: 150px !important;
+  height: 150px;
   position: relative;
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
+.circle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  animation: turn 3s linear infinite;
+}
+
+@keyframes turn {
+  100% {
+    transform: rotateZ(360deg);
   }
+}
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
+.circle span {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.circle span:nth-child(1) {
+  border-radius: 50%;
+  border-top: 15px rgb(243, 6, 6) solid;
+  filter: drop-shadow(0 0 15px rgb(255, 0, 0));
+}
+
+.circle span:nth-child(2) {
+  border-radius: 50%;
+  border-top: 15px rgb(0, 110, 255) solid;
+  transform: rotateZ(120deg);
+  filter: drop-shadow(0 0 15px rgb(0, 132, 255));
+}
+
+.circle span:nth-child(3) {
+  border-radius: 50%;
+  border-top: 15px rgb(0, 255, 42) solid;
+  transform: rotateZ(240deg);
+  filter: drop-shadow(0 0 15px rgb(30, 255, 0));
+}
+
+.box h5 {
+  font-family: "MedievalSharp", cursive;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 150px;
+  text-align: center;
+  font-size: 23px;
+  color: rgb(4, 174, 253);
+  letter-spacing: 1.5px;
+  animation: bian 12s linear infinite;
+  text-shadow: 0 0 10px rgb(4, 174, 253), 0 0 50px rgb(4, 174, 253);
+}
+
+@keyframes bian {
+  50% {
+    text-shadow: 0 0 10px rgb(4, 174, 253);
+    filter: hue-rotate(360deg);
   }
 }
 </style>

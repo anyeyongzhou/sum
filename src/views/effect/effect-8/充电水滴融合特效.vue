@@ -1,82 +1,90 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
-    </div>
+  <div class="kuang">
+    <div
+      class="droplet"
+      v-for="(drop, index) in droplets"
+      :key="index"
+      :style="{ animationDelay: `${index * 0.5}s` }"
+    ></div>
+    <div class="quan"></div>
+    <span>{{ humidity }}%</span>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref } from "vue";
 
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
-
-const effect = ref(true);
-const buttonContent = ref("查看代码");
-
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
-};
-
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
-  }
-};
-
-onMounted(() => {
-  loadHTML();
-});
+const droplets = ref([1, 2, 3]);
+const humidity = ref(99);
 </script>
 
 <style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+.kuang {
   position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(5, 5, 5);
+  filter: contrast(30);
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
-  }
+.droplet {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgb(61, 233, 99);
+  filter: blur(20px);
+  animation: fall 3s linear infinite;
+  opacity: 0;
+}
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
+@keyframes fall {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-500%);
   }
+  50% {
+    opacity: 1;
+    transform: scale(0.5) translateY(-100%);
+  }
+  100% {
+    transform: scale(0.3) translateY(0px);
+  }
+}
+
+.quan {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgb(61, 233, 99);
+  filter: blur(20px);
+  animation: zhuan 3s infinite;
+}
+
+@keyframes zhuan {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    height: 90px;
+    border-top-left-radius: 45%;
+    border-bottom-left-radius: 48%;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+span {
+  position: absolute;
+  color: rgb(184, 182, 182);
+  font-size: 26px;
+  font-family: "fangsong";
+  font-weight: bold;
 }
 </style>
