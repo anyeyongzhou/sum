@@ -1,82 +1,75 @@
 <template>
-  <div class="home">
-    <template v-if="effect">
-      <iframe :src="src" frameborder="0" class="iframe"></iframe>
-    </template>
-    <template v-else>
-      <div>
-        <pre>
-          <code>{{ htmlContent }}</code>
-        </pre>
-      </div>
-    </template>
-    <div class="button">
-      <el-button type="primary" @click="handleClick">{{
-        buttonContent
-      }}</el-button>
-    </div>
+  <div class="quan">
+    <div class="shui"></div>
   </div>
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
-
-const path = route.path;
-const segments = path.split("/");
-let segment = segments[1];
-let src = ref(`./src/views/${segment}/index.html`);
-if (segment.includes("-")) {
-  segment = segment.split("-")[0];
-  src.value = `./src/views/${segment}/${segments[1]}/index.html`;
-}
-
-const effect = ref(true);
-const buttonContent = ref("查看代码");
-
-const handleClick = () => {
-  effect.value = !effect.value;
-  buttonContent.value = effect.value ? "查看代码" : "返回";
-};
-
-const htmlContent = ref();
-const loadHTML = async () => {
-  try {
-    const response = await fetch(src.value); // 根据实际路径
-    if (response.ok) {
-      htmlContent.value = await response.text();
-    } else {
-      ElMessage.error("无法加载 HTML 文件");
-    }
-  } catch (error) {
-    ElMessage.error("加载错误:", error);
-  }
-};
-
-onMounted(() => {
-  loadHTML();
-});
+// 无需 JS 逻辑，此处空着即可
 </script>
 
-<style lang="scss" scoped>
-.home {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
+<style scoped lang="scss">
+.quan {
   position: relative;
+  width: 180px !important;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px solid rgb(246, 247, 248);
+  box-shadow: 0 0 0 3px rgb(41, 134, 196);
+}
 
-  .iframe {
-    width: 100%;
-    height: 100%;
+.shui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(23, 106, 201);
+  border-radius: 50%;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    border-radius: 40%;
+    background-color: rgb(240, 228, 228);
+    animation: shi 5s linear infinite;
+    transform: translate(-50%, -65%);
   }
 
-  .button {
-    position: fixed;
-    right: 30px;
-    top: 130px;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    border-radius: 42%;
+    background-color: rgba(240, 228, 228, 0.2);
+    animation: xu 7s linear infinite;
+    transform: translate(-50%, -60%);
+  }
+}
+
+@keyframes shi {
+  0% {
+    transform: translate(-50%, -65%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -65%) rotate(360deg);
+  }
+}
+
+@keyframes xu {
+  0% {
+    transform: translate(-50%, -60%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -60%) rotate(360deg);
   }
 }
 </style>
