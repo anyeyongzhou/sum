@@ -10,6 +10,7 @@ import ElementPlus from 'element-plus';
 
 import '/@/theme/index.scss';
 import VueGridLayout from 'vue-grid-layout';
+import 'bootstrap/dist/css/bootstrap-grid.min.css';
 
 // import "bpmn-js/dist/assets/diagram-js.css";
 // import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
