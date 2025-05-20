@@ -470,7 +470,7 @@ const initChart = () => {
 			clearInterval(timeTicket);
 			timeTicket = null;
 		}
-		timeTicket = autoHover(props.xAxisData.length);
+		autoHover(props.xAxisData.length);
 	}
 	chart.setOption(option);
 };

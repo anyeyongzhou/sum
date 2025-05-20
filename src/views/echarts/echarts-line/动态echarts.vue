@@ -84,7 +84,7 @@ onMounted(() => {
 			isShowAreaStyle: true,
 			intervalValue: 0,
 		};
-	}, 3000);
+	}, 5000);
 });
 </script>
 
