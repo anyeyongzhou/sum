@@ -20,8 +20,14 @@
         <!--        </div>-->
       </div>
     </el-container>
-    <div class="return-btn" v-if="routerName != '首页'" @click="gotoHome">
-      返回首页
+    <div class="btn-list" v-if="route.path != '/home'">
+      <el-button @click="gotoPre" size="mini" type="primary">
+        上一个
+      </el-button>
+      <el-button @click="gotoHome" size="mini" type="success"> 首页 </el-button>
+      <el-button @click="gotoNext" size="mini" type="primary">
+        下一个
+      </el-button>
     </div>
   </el-container>
 </template>
@@ -36,8 +42,10 @@ import {
   onMounted,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useScrollStore } from "/@/stores/scrollStore";
 import { storeToRefs } from "pinia";
 import { useThemeConfig } from "/@/stores/themeConfig";
+import { useScrollPosition } from "/@/hooks/useScrollPosition";
 
 // 引入组件
 const Breadcrumb = defineAsyncComponent(
@@ -61,7 +69,9 @@ const layoutMainRef = ref<InstanceType<typeof LayoutMain>>();
 const route = useRoute();
 const router = useRouter();
 const storesThemeConfig = useThemeConfig();
+const scrollStore = useScrollStore();
 const { themeConfig } = storeToRefs(storesThemeConfig);
+const { saveLastClicked } = useScrollPosition("home_page");
 
 // 判断是否显示 tasgview
 const isTagsview = computed(() => {
@@ -93,7 +103,37 @@ const routerName = computed(() => {
 });
 
 const gotoHome = () => {
-  router.push("/home");
+  router.push({
+    path: "/home",
+  });
+};
+const gotoPre = (path: any) => {
+  let pathObj = scrollStore.getPrevRoute(route.path);
+  if (pathObj) {
+    router.push({
+      path: pathObj.path,
+    });
+    saveLastClicked(pathObj.path);
+  } else {
+    ElMessage({
+      message: "已经是第一个了",
+      type: "warning",
+    });
+  }
+};
+const gotoNext = (path: any) => {
+  let pathObj = scrollStore.getNextRoute(route.path);
+  if (pathObj) {
+    router.push({
+      path: pathObj.path,
+    });
+    saveLastClicked(pathObj.path);
+  } else {
+    ElMessage({
+      message: "已经是最后一个了",
+      type: "warning",
+    });
+  }
 };
 
 // 页面加载时
@@ -140,18 +180,18 @@ watch(
     }
   }
 }
-.return-btn {
+.btn-list {
   position: fixed;
   top: 8.5%;
   right: 2%;
-  width: 100px;
+  // width: 200px;
   height: 40px;
-  line-height: 40px;
-  text-align: center;
-  border: 1px solid var(--el-menu-active-color);
-  border-radius: 5px;
-  background: var(--el-menu-active-color);
-  color: #000;
-  cursor: pointer;
+  // border: 1px solid red;
+  display: flex;
+  // flex-wrap: nowrap;
+  // flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  // padding: 5% 0;
 }
 </style>

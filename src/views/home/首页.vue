@@ -10,7 +10,11 @@
         placeholder="请输入按钮名称进行搜索"
         clearable
         class="search-input"
+        @change="handleSearchChange"
       />
+      <el-button @click="resetState" type="warning" class="reset-btn">
+        重置所有状态
+      </el-button>
     </div>
     <el-divider direction="horizontal" content-position="center"></el-divider>
     <!-- 修改为根据搜索结果展示 -->
@@ -42,19 +46,21 @@
 
 <script setup>
 import { reactive, computed, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { useScrollStore } from "/@/stores/scrollStore";
 import { useScrollPosition } from "/@/hooks/useScrollPosition";
 
 const router = useRouter();
 const buttonList = reactive([]);
-const searchText = ref("");
 const viewsModules = import.meta.glob("../../views/**/*.vue");
 
 const scrollStore = useScrollStore();
 const { saveLastClicked, getLastClicked } = useScrollPosition("home_page");
 
+// 从store初始化搜索文本
+const searchText = ref(scrollStore.getSearchText("home_page"));
 const lastClickedPath = ref(null);
+const scrollContainer = ref(null);
 
 // 分类后的按钮
 const categorizedButtons = computed(() => {
@@ -89,22 +95,39 @@ const hasSearchResults = computed(() => {
 });
 
 const constructButtonList = () => {
+  const routes = {};
+
   Object.entries(viewsModules).forEach(([filePath, component]) => {
     const segments = filePath.split("/");
     const fileName = segments.pop().replace(".vue", "");
     const folderName = segments.pop();
     const category = segments.pop();
 
-    if (["login", "components", "home", "codeTemplate"].includes(folderName))
+    if (["login", "components", "home", "codeTemplate"].includes(folderName)) {
       return;
+    }
 
-    buttonList.push({
+    const routeInfo = {
       path: `/${folderName}`,
+      name: fileName,
+      category,
+      title: fileName,
+    };
+
+    // 添加到按钮列表
+    buttonList.push({
+      path: routeInfo.path,
       meta: { title: fileName },
       name: fileName,
       category,
     });
+
+    // 添加到路由信息集合
+    routes[routeInfo.path] = routeInfo;
   });
+
+  // 存储到Pinia
+  scrollStore.resetAllRoutes(routes);
 };
 
 const isLastClicked = path => {
@@ -117,10 +140,39 @@ const handleClick = path => {
   router.push(path);
 };
 
+// 监听搜索文本变化
+const handleSearchChange = () => {
+  scrollStore.saveSearchText("home_page", searchText.value);
+};
+
+// 重置所有记忆状态
+const resetState = () => {
+  scrollStore.clearPageData("home_page");
+  searchText.value = "";
+  lastClickedPath.value = null;
+  if (scrollContainer.value) {
+    scrollContainer.value.scrollTop = 0;
+  }
+};
+
+// 路由离开前保存状态
+onBeforeRouteLeave((to, from, next) => {
+  if (scrollContainer.value) {
+    scrollStore.savePosition("home_page", scrollContainer.value.scrollTop);
+  }
+  scrollStore.saveSearchText("home_page", searchText.value);
+  next();
+});
+
+// 恢复所有状态
 onMounted(() => {
-  // 初始化按钮列表
   constructButtonList();
   lastClickedPath.value = getLastClicked();
+
+  // 恢复滚动位置
+  if (scrollContainer.value) {
+    scrollContainer.value.scrollTop = scrollStore.getPosition("home_page");
+  }
 });
 </script>
 
@@ -154,6 +206,9 @@ onMounted(() => {
       width: 300px;
       height: 100%;
     }
+    .reset-btn {
+      margin-left: 20px;
+    }
   }
 
   .category {
@@ -181,10 +236,21 @@ onMounted(() => {
       background-color: #f56c6c;
       border-color: #f56c6c;
     }
+    :deep(.el-button.last-clicked) {
+      background-color: #f56c6c;
+      border-color: #f56c6c;
+
+      &:hover,
+      &:focus {
+        background-color: #f78989;
+        border-color: #f78989;
+      }
+    }
   }
 
   .button {
     margin: 10px;
+    transition: all 0.3s ease;
   }
 
   .no-results {
