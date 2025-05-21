@@ -12,6 +12,7 @@ import mittBus from "/@/utils/mitt";
 // 引入组件
 const layouts: any = {
   defaults: defineAsyncComponent(() => import("/@/layout/main/defaults.vue")),
+  // 当前使用
   classic: defineAsyncComponent(() => import("/@/layout/main/classic.vue")),
   transverse: defineAsyncComponent(
     () => import("/@/layout/main/transverse.vue")

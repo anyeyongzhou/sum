@@ -2,10 +2,10 @@
   <el-container class="layout-container flex-center">
     <LayoutHeader />
     <el-container class="layout-mian-height-50">
-      <LayoutAside />
+      <!-- <LayoutAside /> -->
       <div class="flex-center layout-backtop">
         <el-breadcrumb separator="|" class="breadcrumb_list">
-          <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+          <!-- <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item> -->
           <el-breadcrumb-item
             class="breadcrumb_list_item"
             v-if="routeObj.routeName && routeObj.routeName !== '首页'"
@@ -13,13 +13,16 @@
             >{{ routeObj.routeName }}</el-breadcrumb-item
           >
         </el-breadcrumb>
-        <LayoutTagsView v-if="isTagsview" />
+        <!-- <LayoutTagsView v-if="isTagsview" /> -->
         <LayoutMain ref="layoutMainRef" />
         <!--        <div style="background-color: white;height: 50px;">-->
         <!--          <Breadcrumb />-->
         <!--        </div>-->
       </div>
     </el-container>
+    <div class="return-btn" v-if="routerName != '首页'" @click="gotoHome">
+      返回首页
+    </div>
   </el-container>
 </template>
 
@@ -32,7 +35,7 @@ import {
   nextTick,
   onMounted,
 } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useThemeConfig } from "/@/stores/themeConfig";
 
@@ -56,6 +59,7 @@ const LayoutTagsView = defineAsyncComponent(
 // 定义变量内容
 const layoutMainRef = ref<InstanceType<typeof LayoutMain>>();
 const route = useRoute();
+const router = useRouter();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 
@@ -82,6 +86,16 @@ let routeObj = ref({
   routeName: "",
   routePath: "",
 });
+
+const routerName = computed(() => {
+  console.log("routerName", routeObj.value.routeName);
+  return routeObj.value.routeName;
+});
+
+const gotoHome = () => {
+  router.push("/home");
+};
+
 // 页面加载时
 onMounted(() => {
   if (route.meta.title != null) {
@@ -125,5 +139,19 @@ watch(
       color: var(--el-menu-active-color);
     }
   }
+}
+.return-btn {
+  position: fixed;
+  top: 8.5%;
+  right: 2%;
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: 1px solid var(--el-menu-active-color);
+  border-radius: 5px;
+  background: var(--el-menu-active-color);
+  color: #000;
+  cursor: pointer;
 }
 </style>
