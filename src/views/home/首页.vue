@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <div class="home" ref="scrollContainer">
+    <!-- 原有内容保持不变 -->
     <el-divider direction="horizontal" content-position="center"></el-divider>
     <!-- 添加搜索框 -->
     <div class="search">
@@ -27,7 +28,7 @@
           :key="button.path"
           @click="handleClick(button.path)"
           type="primary"
-          class="button"
+          :class="{ 'last-clicked': isLastClicked(button.path), button: true }"
         >
           {{ button.meta.title }}
         </el-button>
@@ -40,13 +41,20 @@
 </template>
 
 <script setup>
-import { reactive, computed, onMounted, ref } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollStore } from "/@/stores/scrollStore";
+import { useScrollPosition } from "/@/hooks/useScrollPosition";
 
 const router = useRouter();
 const buttonList = reactive([]);
-const searchText = ref(""); // 搜索文本
-const viewsModules = import.meta.glob("../../views/**/*.vue"); // 只扫描.vue文件
+const searchText = ref("");
+const viewsModules = import.meta.glob("../../views/**/*.vue");
+
+const scrollStore = useScrollStore();
+const { saveLastClicked, getLastClicked } = useScrollPosition("home_page");
+
+const lastClickedPath = ref(null);
 
 // 分类后的按钮
 const categorizedButtons = computed(() => {
@@ -83,37 +91,50 @@ const hasSearchResults = computed(() => {
 const constructButtonList = () => {
   Object.entries(viewsModules).forEach(([filePath, component]) => {
     const segments = filePath.split("/");
-    const fileName = segments.pop().replace(".vue", ""); // 去掉.vue后缀
-    const folderName = segments.pop(); // 第二层文件夹（如1-1）
-    const category = segments.pop(); // 第一层文件夹（如1）
+    const fileName = segments.pop().replace(".vue", "");
+    const folderName = segments.pop();
+    const category = segments.pop();
 
-    // 排除不需要的目录
     if (["login", "components", "home", "codeTemplate"].includes(folderName))
       return;
 
     buttonList.push({
-      path: `/${folderName}`, // 关键点：路由路径必须和router中注册的一致
+      path: `/${folderName}`,
       meta: { title: fileName },
       name: fileName,
-      category, // 分类标识
+      category,
     });
   });
 };
 
-const handleClick = path => {
-  router.push(path); // 确保router中已注册该path
+const isLastClicked = path => {
+  return lastClickedPath.value === path;
 };
 
-onMounted(constructButtonList);
+const handleClick = path => {
+  lastClickedPath.value = path;
+  saveLastClicked(path);
+  router.push(path);
+};
+
+onMounted(() => {
+  // 初始化按钮列表
+  constructButtonList();
+  lastClickedPath.value = getLastClicked();
+});
 </script>
 
 <style lang="scss" scoped>
 .home {
-  height: 100%;
+  height: 100vh;
   width: 100%;
   background: #fff;
   padding: 10px 10px 50px 10px;
+  overflow-y: auto;
+  position: relative;
+  box-sizing: border-box;
 
+  /* 原有样式保持不变 */
   .search {
     width: 100%;
     height: 60px;
@@ -121,7 +142,6 @@ onMounted(constructButtonList);
     justify-content: center;
     align-items: center;
     margin: 20px 0 20px 0;
-    // border: 1px solid red;
     .tooltip {
       width: 250px;
       height: 100%;
@@ -141,12 +161,10 @@ onMounted(constructButtonList);
     .title {
       width: 100%;
       height: 50px;
-      // border: 1px solid red;
       display: flex;
       justify-content: center;
       align-items: center;
       span {
-        // width: 20%;
         height: 100%;
         display: flex;
         justify-content: center;
@@ -158,6 +176,10 @@ onMounted(constructButtonList);
         color: #fff;
         padding: 0 20px;
       }
+    }
+    .last-clicked {
+      background-color: #f56c6c;
+      border-color: #f56c6c;
     }
   }
 
