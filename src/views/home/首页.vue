@@ -1,13 +1,17 @@
 <template>
   <div class="home">
+    <el-divider direction="horizontal" content-position="center"></el-divider>
     <!-- 添加搜索框 -->
-    <el-input
-      v-model="searchText"
-      placeholder="请输入按钮名称进行搜索"
-      clearable
-      class="search-input"
-    />
-
+    <div class="search">
+      <span class="tooltip">输入名称进行搜索：</span>
+      <el-input
+        v-model="searchText"
+        placeholder="请输入按钮名称进行搜索"
+        clearable
+        class="search-input"
+      />
+    </div>
+    <el-divider direction="horizontal" content-position="center"></el-divider>
     <!-- 修改为根据搜索结果展示 -->
     <div v-if="hasSearchResults">
       <div
@@ -15,7 +19,9 @@
         :key="category"
         class="category"
       >
-        <h3>{{ category }}</h3>
+        <div class="title">
+          <span>{{ category.replace(/^\d+/, "") }}</span>
+        </div>
         <el-button
           v-for="button in buttons"
           :key="button.path"
@@ -82,7 +88,8 @@ const constructButtonList = () => {
     const category = segments.pop(); // 第一层文件夹（如1）
 
     // 排除不需要的目录
-    if (["login", "components", "0"].includes(folderName)) return;
+    if (["login", "components", "home", "codeTemplate"].includes(folderName))
+      return;
 
     buttonList.push({
       path: `/${folderName}`, // 关键点：路由路径必须和router中注册的一致
@@ -107,17 +114,51 @@ onMounted(constructButtonList);
   background: #fff;
   padding: 10px 10px 50px 10px;
 
-  .search-input {
-    margin-bottom: 20px;
-    width: 300px;
+  .search {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0 20px 0;
+    // border: 1px solid red;
+    .tooltip {
+      width: 250px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 26px;
+    }
+    .search-input {
+      width: 300px;
+      height: 100%;
+    }
   }
 
   .category {
     margin-bottom: 20px;
-  }
-  .category h3 {
-    margin: 10px 0;
-    color: #666;
+    .title {
+      width: 100%;
+      height: 50px;
+      // border: 1px solid red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        // width: 20%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: skyblue;
+        border-radius: 5px;
+        font-size: 20px;
+        font-weight: 800;
+        color: #fff;
+        padding: 0 20px;
+      }
+    }
   }
 
   .button {

@@ -42,7 +42,7 @@ export const dynamicRoutes: any = [
     path: "/",
     name: "/",
     component: () => import("/@/layout/index.vue"),
-    redirect: "/0",
+    redirect: "/home",
     meta: {
       isKeepAlive: false,
     },
