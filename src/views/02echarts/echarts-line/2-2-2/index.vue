@@ -1,16 +1,32 @@
 <template>
   <div class="chart-content">
-    <EchartBox
-      class="chart-content-main"
-      :option="option"
-      @moveLeft="moveLeft"
-      @moveRight="moveRight"
-    />
+    <div class="chart-container">
+      <div
+        class="nav-button left-button"
+        :class="{ disabled: isLeftDisabled }"
+        @click="moveLeft"
+      >
+        <span class="arrow">←</span>
+      </div>
+      <EchartBox
+        class="chart-content-main"
+        :option="option"
+        @moveLeft="moveLeft"
+        @moveRight="moveRight"
+      />
+      <div
+        class="nav-button right-button"
+        :class="{ disabled: isRightDisabled }"
+        @click="moveRight"
+      >
+        <span class="arrow">→</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import EchartBox from "./components/echaetBox.vue";
 
 const chartData = ref([]);
@@ -103,6 +119,12 @@ onMounted(() => {
   chartData.value = initChartData("2023-11-01", "2023-12-31");
   initOption();
 });
+
+// 计算属性：判断是否到达边界
+const isLeftDisabled = computed(() => startInd.value === 0);
+const isRightDisabled = computed(
+  () => startInd.value >= chartData.value.length - len.value
+);
 </script>
 
 <style scoped>
@@ -111,9 +133,49 @@ onMounted(() => {
   width: 100% !important;
 }
 
-.chart-content-main {
+.chart-container {
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 100%;
+  position: relative;
+}
+
+.chart-content-main {
+  flex: 1;
+  height: 100%;
   background: #ff0;
+}
+
+.nav-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  transition: all 0.3s ease;
+  background: #4caf50;
+  color: white;
+  font-size: 20px;
+  user-select: none;
+}
+
+.nav-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-button.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.arrow {
+  line-height: 1;
 }
 </style>
