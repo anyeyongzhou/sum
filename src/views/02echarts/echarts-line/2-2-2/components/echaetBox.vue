@@ -1,105 +1,133 @@
 <template>
-  <div :id="id" :ref="id" class="echart-box"></div>
+  <div :id="id" ref="chartRef" class="echart-box"></div>
 </template>
 
-<script>
-export default {
-  name: "echartBox",
-  props: {
-    id: {
-      type: String,
-      default: "echartBox" + Math.floor(Math.random() * 100000)
-    },
-    option: {
-      type: Object,
-      default: () => {}
-    },
-    distance: {
-      type: Number,
-      default: 10
-    }
-  },
-  data: () => {
-    return {
-      lastX: 0,
-      isTouch: false
-    };
-  },
-  watch: {
-    option() {
-      this.initChart();
-    }
-  },
-  mounted() {
-    this.initChart();
-  },
-  methods: {
-    debounce(func, delay = 100) {
-      let timer;
-      return function(...args) {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          func.apply(this, args);
-        }, delay);
-      };
-    },
-    mousemove(e) {
-      if (this.isTouch) {
-        const currentX = e.offsetX || e.event.zrX;
-        const distance = currentX - this.lastX;
-        if (distance > this.distance) {
-          this.$emit("moveRight");
-        } else if (distance < -this.distance) {
-          this.$emit("moveLeft");
-        }
-        this.lastX = currentX;
-      }
-    },
-    initListent(myEcharts) {
-      // 监听touchstart事件或mousedown事件，记录起始位置
-      myEcharts.getZr().on("mousedown", e => {
-        this.lastX = e.offsetX || e.event.zrX;
-        this.isTouch = true;
-      });
-      myEcharts.getZr().on("touchstart", e => {
-        this.lastX = e.offsetX || e.event.zrX;
-        this.isTouch = true;
-      });
+<script setup>
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import * as echarts from "echarts";
 
-      // 监听touchmove事件或mousemove事件，计算滑动距离并触发相应操作
-      myEcharts.getZr().on("mousemove", this.debounce(this.mousemove));
-      myEcharts.getZr().on("touchmove", this.debounce(this.mousemove));
+const props = defineProps({
+  id: {
+    type: String,
+    default: `echartBox${Math.floor(Math.random() * 100000)}`,
+  },
+  option: {
+    type: Object,
+    default: () => ({}),
+  },
+  distance: {
+    type: Number,
+    default: 5,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-      // 监听touchend事件或mouseup事件，重置状态
-      myEcharts.getZr().on("mouseup", () => {
-        this.isTouch = false;
-      });
-      myEcharts.getZr().on("touchend", () => {
-        this.isTouch = false;
-      });
-    },
-    initChart() {
-      try {
-        let myEcharts = this.myEcharts;
-        if (!myEcharts) {
-          myEcharts = this.$echarts.init(this.$refs[this.id]);
-          this.myEcharts = myEcharts;
-        }
-        myEcharts.clear();
-        myEcharts.setOption(this.option);
-        this.initListent(myEcharts);
-      } catch (err) {
-        console.log(err);
+const emit = defineEmits(["moveRight", "moveLeft"]);
+
+const chartRef = ref(null);
+let chart = null;
+const lastX = ref(0);
+const isTouch = ref(false);
+
+const debounce = (func, delay = 100) => {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+};
+
+const mousemove = e => {
+  if (isTouch.value && !props.loading) {
+    const currentX = e.offsetX || e.event.zrX;
+    const distance = currentX - lastX.value;
+    if (Math.abs(distance) > props.distance) {
+      if (distance > 0) {
+        emit("moveRight");
+      } else {
+        emit("moveLeft");
       }
-    },
-    // 隐藏tooltip
-    hideTooltip() {
-      this.myEcharts.dispatchAction({
-        type: "hideTip"
-      });
+      lastX.value = currentX;
     }
   }
 };
+
+const initListener = chartInstance => {
+  const zr = chartInstance.getZr();
+
+  const mousedownHandler = e => {
+    lastX.value = e.offsetX || e.event.zrX;
+    isTouch.value = true;
+  };
+
+  const touchstartHandler = e => {
+    lastX.value = e.offsetX || e.event.zrX;
+    isTouch.value = true;
+  };
+
+  const debouncedMousemove = debounce(mousemove);
+
+  zr.on("mousedown", mousedownHandler);
+  zr.on("touchstart", touchstartHandler);
+  zr.on("mousemove", debouncedMousemove);
+  zr.on("touchmove", debouncedMousemove);
+  zr.on("mouseup", () => (isTouch.value = false));
+  zr.on("touchend", () => (isTouch.value = false));
+
+  return () => {
+    zr.off("mousedown", mousedownHandler);
+    zr.off("touchstart", touchstartHandler);
+    zr.off("mousemove", debouncedMousemove);
+    zr.off("touchmove", debouncedMousemove);
+    zr.off("mouseup");
+    zr.off("touchend");
+  };
+};
+
+const initChart = () => {
+  try {
+    if (!chartRef.value) return;
+
+    if (!chart) {
+      chart = echarts.init(chartRef.value);
+    }
+
+    chart.clear();
+    chart.setOption(props.option);
+
+    const cleanup = initListener(chart);
+
+    return cleanup;
+  } catch (err) {
+    console.error("ECharts initialization error:", err);
+  }
+};
+
+const hideTooltip = () => {
+  chart?.dispatchAction({
+    type: "hideTip",
+  });
+};
+
+watch(() => props.option, initChart, { deep: true });
+
+onMounted(() => {
+  const cleanup = initChart();
+
+  onBeforeUnmount(() => {
+    cleanup?.();
+    chart?.dispose();
+  });
+});
+
+defineExpose({
+  hideTooltip,
+});
 </script>
 
 <style scoped>
