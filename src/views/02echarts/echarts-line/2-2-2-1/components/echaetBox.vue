@@ -97,16 +97,11 @@ const initChart = () => {
       chart = echarts.init(chartRef.value);
     }
 
-    if (
-      props.option &&
-      props.option.series &&
-      props.option.series[0].data.length > 0
-    ) {
-      chart.clear();
-      chart.setOption(props.option);
-    }
+    chart.clear();
+    chart.setOption(props.option);
 
     const cleanup = initListener(chart);
+
     return cleanup;
   } catch (err) {
     console.error("ECharts initialization error:", err);
@@ -119,16 +114,7 @@ const hideTooltip = () => {
   });
 };
 
-watch(
-  () => props.option,
-  newOption => {
-    console.log("option", newOption);
-    if (newOption && newOption.series && newOption.series[0].data.length > 0) {
-      initChart();
-    }
-  },
-  { deep: true, immediate: true }
-);
+watch(() => props.option, initChart, { deep: true });
 
 onMounted(() => {
   const cleanup = initChart();

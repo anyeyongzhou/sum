@@ -67,7 +67,15 @@ const initOption = (start = 0) => {
 
   startInd.value = start;
   const end = start + len.value;
-  const currentData = chartData.value.slice(start, end);
+
+  // 获取当前显示的数据，并包含前后各一条数据
+  const prevData = start > 0 ? [chartData.value[start - 1]] : [];
+  const nextData = end < chartData.value.length ? [chartData.value[end]] : [];
+  const currentData = [
+    ...prevData,
+    ...chartData.value.slice(start, end),
+    ...nextData,
+  ];
 
   option.value = {
     tooltip: {
@@ -76,6 +84,14 @@ const initOption = (start = 0) => {
     xAxis: {
       type: "category",
       data: currentData.map(item => item.date),
+      axisLabel: {
+        show: (value, index) => {
+          // 只显示当前范围的数据标签
+          return (
+            index >= prevData.length && index < prevData.length + len.value
+          );
+        },
+      },
     },
     yAxis: {
       type: "value",
@@ -86,12 +102,14 @@ const initOption = (start = 0) => {
         data: currentData.map(item => item.value),
         type: "line",
         smooth: true,
+        connectNulls: true,
       },
       {
         name: "数据2",
         data: currentData.map(item => item.value1),
         type: "line",
         smooth: true,
+        connectNulls: true,
       },
     ],
   };
