@@ -8,47 +8,51 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import * as echarts from 'echarts';
 import axios from 'axios';
+import jiangsuJeoJson from '/@/utils/map/sgmap/mapData/jiangsuData.json';
 
 const props = defineProps({
-	// 地图GeoJSON数据URL
-	geoJsonUrl: {
-		type: String,
-		default: 'https://www.isqqw.com/asset/get/areas_v3/province/620000_full.json',
-	},
 	// 城市坐标映射
 	geoCoordMap: {
 		type: Object,
 		default: () => ({
-			嘉峪关市: [98.277304, 39.786529],
-			金昌市: [102.187888, 38.514238],
-			兰州市: [103.823557, 36.058039],
-			天水市: [105.724998, 34.578529],
-			张掖市: [100.455472, 38.932897],
-			平凉市: [106.684691, 35.54279],
-			武威市: [102.634697, 37.929996],
-			白银市: [104.173606, 36.54568],
-			庆阳市: [107.638372, 35.734218],
-			甘南藏族自治州: [102.911008, 34.986354],
-			临夏回族自治州: [103.212006, 35.599446],
-			定西市: [104.626294, 35.579578],
-			陇南市: [104.929379, 33.388598],
-			酒泉市: [96.063265, 40.283136],
-			榆中县: [104.11, 35.84],
+			苏州市: [120.585315, 31.298886],
+			泰州市: [120.1, 32.5],
+			扬州市: [119.512966, 32.69421],
+			南京市: [118.796877, 32],
+			镇江市: [119.5, 32.1],
+			宿迁市: [118.475198, 33.8],
+			徐州市: [117.5, 34.3],
+			南通市: [120.994291, 32.15],
+			盐城市: [120.163561, 33.5],
+			无锡市: [120.4, 31.7],
+			常州市: [119.5, 31.6],
+			淮安市: [119, 33.4],
+			连云港市: [119.221611, 34.596653],
 		}),
 	},
 	// 初始数据
 	initData: {
 		type: Array,
 		default: () => [
-			{ name: '兰州市', value: 0 },
-			{ name: '天水市', value: 0 },
-			// ...其他城市数据
+			{ name: '苏州市', value: 0 },
+			{ name: '泰州市', value: 0 },
+			{ name: '扬州市', value: 0 },
+			{ name: '南京市', value: 0 },
+			{ name: '镇江市', value: 0 },
+			{ name: '宿迁市', value: 0 },
+			{ name: '徐州市', value: 0 },
+			{ name: '南通市', value: 0 },
+			{ name: '盐城市', value: 0 },
+			{ name: '无锡市', value: 0 },
+			{ name: '常州市', value: 0 },
+			{ name: '淮安市', value: 0 },
+			{ name: '连云港市', value: 0 },
 		],
 	},
 	// 地图中心点
 	centerPoint: {
 		type: Array,
-		default: () => [103.823557, 36.058039], // 兰州市坐标
+		default: () => [120.1, 32.5],
 	},
 	// 地图缩放配置
 	zoomConfig: {
@@ -94,8 +98,7 @@ const initChart = async () => {
 
 	try {
 		// 加载GeoJSON数据
-		const { data: geoJson } = await axios.get(props.geoJsonUrl);
-		echarts.registerMap('gansu', geoJson);
+		echarts.registerMap('gansu', jiangsuJeoJson);
 
 		// 准备系列数据
 		const series = [
