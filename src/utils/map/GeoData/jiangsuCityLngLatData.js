@@ -266,4 +266,20 @@ const jsMapData = {
   }
 }
 
-export { cityNameList, cityNameList1, cityNameCodeCorresponding, jiangsuCityLngLatData, jsMapData, cityNameSpellCorresponding, spellCityNameCorresponding };
+const jiangsuMapData = [
+  { name: '苏州市', code: '320500', areaCode: 'dc_city_sz', center: '120.726279,31.2', value: 120, selected: null },
+  { name: '泰州市', code: '321200', areaCode: 'dc_city_tz', center: '120,32.509155', value: 0, selected: null },
+  { name: '扬州市', code: '321000', areaCode: 'dc_city_yz', center: '119.49,32.694210', value: 0, selected: null },
+  { name: '南京市', code: '320100', areaCode: 'dc_city_nj', center: '118.72,31.8', value: 0, selected: null },
+  { name: '镇江市', code: '321100', areaCode: 'dc_city_zj', center: '119.5,31.95', value: 0, selected: null },
+  { name: '宿迁市', code: '321300', areaCode: 'dc_city_sq', center: '118.5,33.763232', value: 0, selected: null },
+  { name: '徐州市', code: '320300', areaCode: 'dc_city_xz', center: '117.55,34.15', value: 0, selected: null },
+  { name: '南通市', code: '320600', areaCode: 'dc_city_nt', center: '120.994291,32.15', value: 0, selected: null },
+  { name: '盐城市', code: '320900', areaCode: 'dc_city_yc', center: '120.163561,33.5', value: 0, selected: null },
+  { name: '无锡市', code: '320200', areaCode: 'dc_city_wx', center: '120.111910,31.4', value: 0, selected: null },
+  { name: '常州市', code: '320400', areaCode: 'dc_city_cz', center: '119.52, 31.55', value: 0, selected: null },
+  { name: '淮安市', code: '320800', areaCode: 'dc_city_ha', center: '119.015285,33.310353', value: 0, selected: null },
+  { name: '连云港市', code: '320700', areaCode: 'dc_city_lyg', center: '119.221611,34.45', value: 0, selected: null },
+]
+
+export { cityNameList, cityNameList1, cityNameCodeCorresponding, jiangsuCityLngLatData, jsMapData, cityNameSpellCorresponding, spellCityNameCorresponding, jiangsuMapData };

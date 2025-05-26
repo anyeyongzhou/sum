@@ -7,13 +7,10 @@
 <script setup>
 import { ref } from 'vue';
 import GansuMapChart from './components/line.vue';
+import { jiangsuMapData } from '/@/utils/map/GeoData/jiangsuCityLngLatData.js';
 
 // 地图数据
-const mapData = ref([
-	{ name: '兰州市', value: 120 },
-	{ name: '天水市', value: 80 },
-	{ name: '酒泉市', value: 65, selected: true },
-]);
+const mapData = ref(jiangsuMapData);
 
 // 处理城市点击事件
 const handleCityClick = (city) => {
