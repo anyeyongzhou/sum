@@ -21,11 +21,13 @@
       </div>
     </el-container>
     <div class="btn-list" v-if="route.path != '/home'">
-      <el-button @click="gotoPre" size="mini" type="primary">
+      <el-button @click="gotoPre" size="small" type="primary">
         上一个
       </el-button>
-      <el-button @click="gotoHome" size="mini" type="success"> 首页 </el-button>
-      <el-button @click="gotoNext" size="mini" type="primary">
+      <el-button @click="gotoHome" size="small" type="success">
+        首页
+      </el-button>
+      <el-button @click="gotoNext" size="small" type="primary">
         下一个
       </el-button>
     </div>
