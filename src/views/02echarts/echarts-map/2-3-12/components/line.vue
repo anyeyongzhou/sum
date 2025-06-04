@@ -27,47 +27,88 @@ const initChart = async () => {
 		// 初始化图表
 		chart = echarts.init(chartRef.value);
 		let option = {
-			series: {
-				type: 'map3D',
-				map: 'jiangsu',
-				show: true,
-				viewControl: {
-					distance: 150,
-					center: [-2, -5, 0],
-				},
-				itemStyle: {
-					color: 'rgba(255,255,255,1)',
-					borderWidth: 0.5,
-					borderColor: `#539efe9a`,
-				},
-				shading: 'lambert',
-				lambertMaterial: {
-					detailTexture: img1,
-				},
-				light: {
-					main: {
-						color: '#fff',
-						intensity: 1.2,
-						shadow: true,
-						shadowQuality: 'ultra',
-					},
-					ambient: {
-						color: 'skyblue',
-						intensity: 0.2,
-					},
-				},
-				emphasis: {
+			tooltip: {
+				show: false,
+				trigger: 'item',
+				formatter: function (params) {},
+			},
+			geo: [
+				{
+					map: 'jiangsu',
+					aspectScale: 1,
+					roam: false, //是否允许缩放
+					zoom: 0.95, //默认显示级别
+					layoutSize: '96%',
+					layoutCenter: ['50%', '49%'],
 					label: {
 						show: true,
-						fontSize: 16,
-						color: '#f9fcff',
-						fontWeight: 600,
+						formatter: '{t|}\n\n{a}',
+						rich: {
+							t: {
+								width: 13,
+								height: 13,
+								borderRadius: 10,
+								backgroundColor: '#fff',
+							},
+						},
+						color: '#EEEEEE',
+						emphasis: {
+							// areaColor: '#38c7dd',
+							color: '#000',
+						},
 					},
 					itemStyle: {
-						color: '#539efe9a',
+						color: {
+							image: img1, // 支持为 HTMLImageElement, HTMLCanvasElement，不支持路径字符串
+							repeat: 'repeat', // 是否平铺，可以是 'repeat-x', 'repeat-y', 'no-repeat'
+						},
+						borderColor: '#3587F6',
+						borderWidth: 1,
 					},
+					z: 4,
 				},
-			},
+				{
+					map: 'jiangsu',
+					aspectScale: 1,
+					roam: false, //是否允许缩放
+					zoom: 0.95, //默认显示级别
+					layoutSize: '96%',
+					layoutCenter: ['50%', '49%'],
+					itemStyle: {
+						borderColor: '#A4E5F9',
+						borderWidth: 6,
+					},
+					z: 3,
+					silent: true,
+				},
+				{
+					map: 'jiangsu',
+					aspectScale: 1,
+					roam: false, //是否允许缩放
+					zoom: 0.95, //默认显示级别
+					layoutSize: '96%',
+					layoutCenter: ['50.3%', '50.5%'],
+					itemStyle: {
+						areaColor: '#0A1527',
+					},
+					z: 2,
+					silent: true,
+				},
+				{
+					map: 'jiangsu',
+					aspectScale: 1,
+					roam: false, //是否允许缩放
+					zoom: 0.95, //默认显示级别
+					layoutSize: '96%',
+					layoutCenter: ['51%', '52.5%'],
+					itemStyle: {
+						areaColor: '#1094D2',
+					},
+					z: 1,
+					silent: true,
+				},
+			],
+			series: [],
 		};
 		chart.setOption(option);
 
