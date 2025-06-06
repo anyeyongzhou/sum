@@ -282,4 +282,20 @@ const jiangsuMapData = [
   { name: '连云港市', code: '320700', areaCode: 'dc_city_lyg', center: '119.221611,34.45', value: 0, selected: null },
 ]
 
-export { cityNameList, cityNameList1, cityNameCodeCorresponding, jiangsuCityLngLatData, jsMapData, cityNameSpellCorresponding, spellCityNameCorresponding, jiangsuMapData };
+const cityGeoListObj = {
+  "苏州市": [120.726279, 31.2],
+  "泰州市": [120, 32.509155],
+  "扬州市": [119.49, 32.694210],
+  "南京市": [118.72, 31.8],
+  "镇江市": [119.5, 31.95],
+  "宿迁市": [118.5, 33.763232],
+  "徐州市": [117.55, 34.15],
+  "南通市": [120.994291, 32.15],
+  "盐城市": [120.163561, 33.5],
+  "无锡市": [120.111910, 31.4],
+  "常州市": [119.52, 31.55],
+  "淮安市": [119.015285, 33.310353],
+  "连云港市": [119.221611, 34.45],
+};
+
+export { cityNameList, cityNameList1, cityNameCodeCorresponding, jiangsuCityLngLatData, jsMapData, cityNameSpellCorresponding, spellCityNameCorresponding, jiangsuMapData, cityGeoListObj };
