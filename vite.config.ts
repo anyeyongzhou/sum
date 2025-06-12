@@ -20,7 +20,9 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
 		plugins: [
-			vue(),
+			vue({
+				reactivityTransform: true, // 确保启用完整调试功能
+			}),
 			vueSetupExtend(),
 			viteCompression(),
 			JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null,
@@ -81,10 +83,14 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 						}
 					},
 				},
+				sourcemap: true, // 生产环境生成 sourcemap
 				...(JSON.parse(env.VITE_OPEN_CDN) ? { external: buildConfig.external } : {}),
 			},
 		},
-		css: { preprocessorOptions: { css: { charset: false } } },
+		css: { preprocessorOptions: { css: { charset: false } }, devSourcemap: true },
+		esbuild: {
+			sourcemap: 'inline', // ESBuild 生成内联 sourcemap
+		},
 		define: {
 			__VUE_I18N_LEGACY_API__: JSON.stringify(false),
 			__VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
