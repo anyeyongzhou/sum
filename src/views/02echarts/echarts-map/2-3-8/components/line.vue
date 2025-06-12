@@ -8,6 +8,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import * as echarts from 'echarts';
 import beijingJson from '/@/utils/geoJson/province/beijing.json';
+import imgUrl from '/@/assets/beauty/1/1-1.jpg';
 
 const chartRef = ref(null);
 let chart = null;
@@ -40,7 +41,7 @@ const initChart = async () => {
 						top: '4%',
 						left: '29%',
 						style: {
-							image: '//img.isqqw.com/profile/upload/2025/02/06/e456654a-b2ea-4f7e-bd39-a94f6ed2f5f4.png',
+							image: imgUrl,
 							width: 800,
 							height: 800,
 						},
