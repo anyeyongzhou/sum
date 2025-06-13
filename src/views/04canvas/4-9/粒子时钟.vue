@@ -4,24 +4,16 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import DS_Digital from "/@/assets/font/DS-DIGI-1.ttf"; // 请确保字体路径正确
 
-interface Particle {
-  x: number;
-  y: number;
-  size: number;
-  draw: () => void;
-  moveTo: (tx: number, ty: number) => void;
-}
-
-const canvas = ref<HTMLCanvasElement | null>(null);
-const ctx = ref<CanvasRenderingContext2D | null>(null);
-const particles = ref<Particle[]>([]);
-const currentText = ref<string>("");
-const textWidth = ref<number>(0);
-const animationFrameId = ref<number>(0);
+const canvas = ref(null);
+const ctx = ref(null);
+const particles = ref([]);
+const currentText = ref("");
+const textWidth = ref(0);
+const animationFrameId = ReferenceError(0);
 
 // 初始化画布
 const initCanvas = () => {
@@ -39,21 +31,21 @@ const initCanvas = () => {
 };
 
 // 生成随机数
-const getRandom = (min: number, max: number): number => {
+const getRandom = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
 // 粒子类
 class Particle {
-  x: number;
-  y: number;
-  size: number;
+  x;
+  y;
+  size;
 
   constructor() {
     const dpr = window.devicePixelRatio || 1;
-    const r = Math.min(canvas.value!.width, canvas.value!.height) / 2;
-    const cx = canvas.value!.width / 2;
-    const cy = canvas.value!.height / 2;
+    const r = Math.min(canvas.value.width, canvas.value.height) / 2;
+    const cx = canvas.value.width / 2;
+    const cy = canvas.value.height / 2;
     const rad = (getRandom(0, 360) * Math.PI) / 180;
     this.x = cx + r * Math.cos(rad);
     this.y = cy + r * Math.sin(rad);
@@ -69,7 +61,7 @@ class Particle {
     ctx.value.fill();
   }
 
-  moveTo(tx: number, ty: number) {
+  moveTo(tx, ty) {
     const duration = 500;
     const sx = this.x;
     const sy = this.y;
@@ -104,7 +96,7 @@ const clearCanvas = () => {
 };
 
 // 获取当前时间文本
-const getTimeText = (): string => {
+const getTimeText = () => {
   return new Date().toTimeString().substring(0, 8);
 };
 
@@ -129,10 +121,10 @@ const drawTimeText = () => {
 };
 
 // 获取文本像素点
-const getTextPixels = (): [number, number][] => {
+const getTextPixels = () => {
   if (!ctx.value || !canvas.value) return [];
 
-  const points: [number, number][] = [];
+  const points = [];
   const gap = 3;
   const dpr = window.devicePixelRatio || 1;
   const width = canvas.value.width;
