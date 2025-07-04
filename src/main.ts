@@ -11,6 +11,7 @@ import ElementPlus from 'element-plus';
 import '/@/theme/index.scss';
 import VueGridLayout from 'vue-grid-layout';
 import 'bootstrap/dist/css/bootstrap-grid.min.css';
+import { setupInputInterceptor } from '/@/directive/inputInterceptor';
 
 // import "bpmn-js/dist/assets/diagram-js.css";
 // import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
@@ -27,4 +28,6 @@ directive(app);
 
 other.elSvg(app);
 
-app.use(pinia).use(router).use(ElementPlus).use(i18n).use(VueGridLayout).use(ComponentRegister).use(Vue3Marquee).mount('#app');
+app.use(pinia).use(router).use(ElementPlus).use(i18n).use(VueGridLayout).use(ComponentRegister).use(Vue3Marquee);
+setupInputInterceptor(app); // 必须在ElementPlus之后调用
+app.mount('#app');
