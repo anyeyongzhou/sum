@@ -75,6 +75,7 @@ export function setupInputInterceptor(app: App) {
 					if (detectedPatterns.length > 0) {
 						// 更新为清理后的值
 						emit('update:modelValue', cleanedValue);
+						emit('input', cleanedValue); // 新增，确保 input 事件被触发
 
 						// 显示具体检测到的危险字符
 						const patternNames = detectedPatterns.join('、');
@@ -84,6 +85,7 @@ export function setupInputInterceptor(app: App) {
 				}
 
 				emit('update:modelValue', value);
+				emit('input', value); // 新增，确保 input 事件被触发
 			};
 
 			return () => {
@@ -91,6 +93,7 @@ export function setupInputInterceptor(app: App) {
 					...attrs,
 					...props,
 					'onUpdate:modelValue': handleUpdateModelValue,
+					onInput: attrs.onInput, // 新增，透传 onInput 事件
 				});
 			};
 		},

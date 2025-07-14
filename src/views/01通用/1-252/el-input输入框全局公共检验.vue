@@ -1,13 +1,25 @@
 <template>
 	<div class="container">
 		<div class="item1">
-			<el-input v-model="value1" oninput="value = value.replace(/[@!#$]/g, '')" placeholder="请输入alert("></el-input>
+			<el-input
+				v-model="value1"
+				@input="
+					($event) => {
+						abc($event);
+					}
+				"
+				placeholder="请输入alert("
+			></el-input>
 		</div>
 	</div>
 </template>
 
 <script setup>
 const value1 = ref();
+
+const abc = (val) => {
+	console.log('val', val);
+};
 </script>
 
 <style lang="scss" scoped>
